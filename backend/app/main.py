@@ -1,0 +1,48 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
+
+from app.core.database import engine, Base
+from app.core.migrate import run_migrations
+from app.models.user import User
+from app.routes.auth_routes import router as auth_router
+from app.routes.admin_routes import router as admin_router
+from app.routes.brand_routes import router as brand_router
+
+app = FastAPI()
+
+# CORS Configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Routers
+app.include_router(auth_router)
+app.include_router(admin_router)
+app.include_router(brand_router)
+
+# Create tables and apply column migrations
+Base.metadata.create_all(bind=engine)
+run_migrations()
+
+
+@app.get("/")
+def home():
+    return {"message": "The Ad Doctor Backend Running"}
+
+
+@app.get("/test-db")
+def test_db():
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+        return {"message": "Database Connected Successfully"}
+    except Exception as e:
+        return {"error": str(e)}
