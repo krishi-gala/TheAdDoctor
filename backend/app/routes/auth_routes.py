@@ -6,6 +6,7 @@ from app.schemas.auth_schema import LoginRequest
 from app.core.database import SessionLocal
 from app.core.security import create_access_token
 from app.core.password import verify_password
+from app.services.permission_service import resolve_user_permissions
 
 
 router = APIRouter()
@@ -52,11 +53,16 @@ def login(user: LoginRequest):
             detail="Invalid Password"
         )
 
+    role_id = getattr(result, "role_id", None)
+    permissions = resolve_user_permissions(result.role, role_id)
+
     token = create_access_token(
         {
             "user_id": result.user_id,
             "email": result.email,
-            "role": result.role
+            "role": result.role,
+            "role_id": role_id,
+            "permissions": permissions,
         }
     )
 
@@ -64,5 +70,6 @@ def login(user: LoginRequest):
         "message": "Login Successful",
         "access_token": token,
         "token_type": "bearer",
-        "role": result.role
+        "role": result.role,
+        "permissions": permissions,
     }

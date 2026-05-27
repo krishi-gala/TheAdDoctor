@@ -1,28 +1,14 @@
-import {
-  LayoutDashboard,
-  Building2,
-  Megaphone,
-  Package,
-  BarChart3,
-  Settings,
-  LogOut,
-} from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { logout } from "../../services/auth";
-
-const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard" },
-  { icon: Building2,       label: "Brands"    },
-  { icon: Megaphone,       label: "Campaigns" },
-  { icon: Package,         label: "Ad Packages"},
-  { icon: BarChart3,       label: "Analytics" },
-  { icon: Settings,        label: "Settings"  },
-];
+import { LogOut } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { logout, hasPermission } from "../../services/auth";
+import { ADMIN_MENU_ITEMS } from "../../config/adminMenu";
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const [active, setActive] = useState("Dashboard");
+
+  const visibleMenuItems = ADMIN_MENU_ITEMS.filter((item) =>
+    hasPermission(item.permission)
+  );
 
   const handleLogout = () => {
     logout(navigate);
@@ -74,7 +60,7 @@ export default function Sidebar() {
           color: rgba(255,255,255,0.5); font-family: 'Inter', sans-serif;
           font-size: 13px; font-weight: 500; width: 100%;
           transition: background 0.15s, color 0.15s;
-          text-align: left;
+          text-align: left; text-decoration: none;
         }
         .sb-item:hover {
           background: rgba(255,255,255,0.07);
@@ -85,9 +71,7 @@ export default function Sidebar() {
           border: 1px solid rgba(167,139,250,0.25);
           color: #c4b5fd;
         }
-        .sb-item.active .sb-item-icon {
-          color: #a78bfa;
-        }
+        .sb-item.active .sb-item-icon { color: #a78bfa; }
         .sb-item-icon { flex-shrink: 0; }
 
         .sb-divider {
@@ -119,18 +103,19 @@ export default function Sidebar() {
         <div className="sb-section-label">Navigation</div>
 
         <nav className="sb-menu">
-          {menuItems.map((item) => {
+          {visibleMenuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = active === item.label;
             return (
-              <button
-                key={item.label}
-                className={`sb-item${isActive ? " active" : ""}`}
-                onClick={() => setActive(item.label)}
+              <NavLink
+                key={item.id}
+                to={item.path}
+                className={({ isActive }) =>
+                  `sb-item${isActive ? " active" : ""}`
+                }
               >
                 <Icon size={18} className="sb-item-icon" />
                 {item.label}
-              </button>
+              </NavLink>
             );
           })}
         </nav>

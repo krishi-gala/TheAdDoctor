@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import { useState } from "react";
+import { setAuthSession, getDefaultRoute } from "../services/auth";
 
 
 
@@ -65,24 +66,16 @@ export default function Login() {
 
       const data = response.data;
 
-      localStorage.setItem(
-        "access_token",
-        data.access_token
-      );
-
-      localStorage.setItem(
-        "role",
-        data.role
-      );
+      setAuthSession({
+        accessToken: data.access_token,
+        role: data.role,
+        permissions: data.permissions || [],
+      });
 
       setStatus("success");
 
       setTimeout(() => {
-        if (data.role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/brand");
-        }
+        navigate(getDefaultRoute(), { replace: true });
       }, 1200);
 
     } catch (err) {

@@ -1,0 +1,2 @@
+-- Run only if users.updated_at does not exist (migrate.py handles this automatically on startup)
+-- ALTER TABLE users ADD updated_at DATETIME NULL;

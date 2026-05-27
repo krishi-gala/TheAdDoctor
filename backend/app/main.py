@@ -5,9 +5,12 @@ from sqlalchemy import text
 from app.core.database import engine, Base
 from app.core.migrate import run_migrations
 from app.models.user import User
+from app.models.audit_log import AuditLog
 from app.routes.auth_routes import router as auth_router
 from app.routes.admin_routes import router as admin_router
 from app.routes.brand_routes import router as brand_router
+from app.routes.package_routes import router as package_router
+
 
 app = FastAPI()
 
@@ -27,6 +30,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(admin_router)
 app.include_router(brand_router)
+app.include_router(package_router)
 
 # Create tables and apply column migrations
 Base.metadata.create_all(bind=engine)

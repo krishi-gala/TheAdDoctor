@@ -20,3 +20,4 @@ class User(Base):
     package = Column(String(100), nullable=True)
 
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

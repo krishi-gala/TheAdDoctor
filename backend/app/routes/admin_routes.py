@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
-from app.core.security import admin_required
+from app.auth.permissions import permission_required
+from app.auth.permission_names import VIEW_DASHBOARD
 from app.core.database import SessionLocal
 
 router = APIRouter(
@@ -13,7 +14,7 @@ router = APIRouter(
 
 @router.get("/dashboard")
 def admin_dashboard(
-    current_user: dict = Depends(admin_required)
+    current_user: dict = Depends(permission_required(VIEW_DASHBOARD)),
 ):
     db: Session = SessionLocal()
 

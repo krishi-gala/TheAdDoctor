@@ -1,12 +1,10 @@
-import { Navigate } from "react-router-dom";
+import ProtectedRoute from "../components/ProtectedRoute";
+import { PERMISSIONS } from "../constants/permissions";
 
 export default function AdminAuth({ children }) {
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
-
-  if (!token || role !== "admin") {
-    return <Navigate to="/" replace />;
-  }
-
-  return children;
+  return (
+    <ProtectedRoute permission={PERMISSIONS.VIEW_DASHBOARD}>
+      {children}
+    </ProtectedRoute>
+  );
 }

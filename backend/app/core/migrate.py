@@ -7,6 +7,7 @@ MIGRATIONS = [
     ("business_type", "ALTER TABLE users ADD business_type NVARCHAR(100) NULL"),
     ("package", "ALTER TABLE users ADD package NVARCHAR(100) NULL"),
     ("is_deleted", "ALTER TABLE users ADD is_deleted BIT NOT NULL DEFAULT 0"),
+    ("updated_at", "ALTER TABLE users ADD updated_at DATETIME NULL"),
 ]
 
 

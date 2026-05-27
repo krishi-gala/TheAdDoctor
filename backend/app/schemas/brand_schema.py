@@ -1,5 +1,20 @@
+import re
 from typing import Optional
-from pydantic import BaseModel, EmailStr, Field
+
+from pydantic import BaseModel, EmailStr, Field, field_validator
+
+PHONE_PATTERN = re.compile(r"^[\d\s+\-()]{7,20}$")
+
+
+def validate_phone_optional(value: Optional[str]) -> Optional[str]:
+    if value is None:
+        return value
+    cleaned = value.strip()
+    if not cleaned:
+        return None
+    if not PHONE_PATTERN.match(cleaned):
+        raise ValueError("Enter a valid phone number (7–20 digits/symbols)")
+    return cleaned
 
 
 class BrandCreate(BaseModel):
@@ -11,6 +26,11 @@ class BrandCreate(BaseModel):
     package: Optional[str] = Field(None, max_length=100)
     is_active: bool = True
 
+    @field_validator("phone_number")
+    @classmethod
+    def phone_format(cls, value: Optional[str]) -> Optional[str]:
+        return validate_phone_optional(value)
+
 
 class BrandUpdate(BaseModel):
     company_name: Optional[str] = Field(None, min_length=2, max_length=255)
@@ -20,6 +40,11 @@ class BrandUpdate(BaseModel):
     business_type: Optional[str] = Field(None, max_length=100)
     package: Optional[str] = Field(None, max_length=100)
     is_active: Optional[bool] = None
+
+    @field_validator("phone_number")
+    @classmethod
+    def phone_format(cls, value: Optional[str]) -> Optional[str]:
+        return validate_phone_optional(value)
 
 
 class BrandStatusPatch(BaseModel):

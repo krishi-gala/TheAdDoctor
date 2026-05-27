@@ -1,4 +1,4 @@
-import { Building2, Megaphone, IndianRupee, TrendingUp } from "lucide-react";
+import { Building2, Megaphone, IndianRupee, TrendingUp, Package } from "lucide-react";
 export default function StatsCards({ dashboardData }) {
 const stats = [
   {
@@ -14,6 +14,20 @@ const stats = [
     tagBg: "rgba(99,102,241,0.15)",
     tagColor: "#a5b4fc",
     tagBorder: "rgba(99,102,241,0.3)",
+  },
+  {
+    icon: Package,
+    label: "Total Packages",
+    value: dashboardData?.total_packages || 0,
+    change: "Active in system",
+    positive: true,
+    iconBg: "rgba(236,72,153,0.18)",
+    iconColor: "#f472b6",
+    glowColor: "rgba(236,72,153,0.12)",
+    borderHover: "rgba(236,72,153,0.35)",
+    tagBg: "rgba(236,72,153,0.12)",
+    tagColor: "#f472b6",
+    tagBorder: "rgba(236,72,153,0.25)",
   },
   {
     icon: Megaphone,
@@ -65,7 +79,7 @@ const stats = [
       <style>{`
         .sc-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
           gap: 20px;
         }
 
