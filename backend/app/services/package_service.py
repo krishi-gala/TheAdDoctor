@@ -88,7 +88,7 @@ def serialize_package(pkg: Package) -> dict:
         "description": pkg.description,
         "is_active": bool(pkg.is_active),
         "created_at": pkg.created_at.isoformat() if pkg.created_at else None,
-        "updated_at": pkg.updated_at.isoformat() if pkg.updated_at else None,
+        
     }
 
 

@@ -106,7 +106,7 @@ def create_package(
     package = Package(**payload.model_dump())
 
     db.add(package)
-    db.commit()
+    
     db.refresh(package)
 
     create_audit_log(
@@ -115,6 +115,7 @@ def create_package(
         action_type="package_created",
         description=f"Created {package.package_name}"
     )
+    db.commit()
 
     return {
         "message": "Package created successfully",

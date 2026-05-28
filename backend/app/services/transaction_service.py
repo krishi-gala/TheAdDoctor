@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime , timezone
 from typing import Optional
 
 from sqlalchemy import desc
@@ -60,9 +60,9 @@ def purchase_package(
         expiry_date=expiry_date,
     )
 
+    brand.active_package_id = package.package_id
+    purchased_at=datetime.now(timezone.utc)
     brand.package = package.package_name
-    brand.updated_at = datetime.utcnow()
-
     create_audit_log(
         db,
         action_by=actor_id,

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.auth.permission_names import MANAGE_BRANDS
 from app.auth.permissions import permission_required
-from app.core.database import SessionLocal
+from app.core.database import SessionLocal , get_db
 from app.core.password import hash_password
 from app.models.user import User
 from app.schemas.brand_schema import BrandCreate, BrandStatusPatch, BrandUpdate
@@ -26,13 +26,6 @@ router = APIRouter(
     tags=["Brand Management"],
 )
 
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def get_brand_or_404(db: Session, brand_id: int) -> User:
@@ -125,8 +118,7 @@ def create_brand(
             package=payload.package,
         )
         db.add(brand)
-        db.flush()
-
+       
         create_audit_log(
             db,
             action_by=get_actor_id(current_user),
@@ -218,20 +210,35 @@ def delete_brand(
     current_user: dict = Depends(permission_required(MANAGE_BRANDS)),
     db: Session = Depends(get_db),
 ):
-    brand = get_brand_or_404(db, brand_id)
-    brand.is_deleted = True
-    brand.is_active = False
-    touch_updated_at(brand)
-    create_audit_log(
-        db,
-        action_by=get_actor_id(current_user),
-        action_type="brand_delete",
-        target_user_id=brand.user_id,
-        description="Admin deleted brand",
-    )
-    db.commit()
-    return {"message": "Brand deleted successfully"}
+    try:
+        brand = get_brand_or_404(db, brand_id)
 
+        brand.is_deleted = True
+        brand.is_active = False
+        touch_updated_at(brand)
+
+        create_audit_log(
+            db,
+            action_by=get_actor_id(current_user),
+            action_type="brand_deleted",
+            target_user_id=brand.user_id,
+            description="Admin deleted brand",
+        )
+
+        db.commit()
+
+        return {"message": "Brand deleted successfully"}
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Could not delete brand: {str(e)}"
+        )
 
 @router.patch("/brands/{brand_id}/status")
 def update_brand_status(
@@ -240,22 +247,41 @@ def update_brand_status(
     current_user: dict = Depends(permission_required(MANAGE_BRANDS)),
     db: Session = Depends(get_db),
 ):
-    brand = get_brand_or_404(db, brand_id)
-    brand.is_active = payload.is_active
-    touch_updated_at(brand)
-    description = (
-        "Admin activated brand" if payload.is_active else "Admin deactivated brand"
-    )
-    create_audit_log(
-        db,
-        action_by=get_actor_id(current_user),
-        action_type="brand_status",
-        target_user_id=brand.user_id,
-        description=description,
-    )
-    db.commit()
-    db.refresh(brand)
-    return {
-        "message": "Brand status updated",
-        "brand": serialize_brand_list(brand),
-    }
+    try:
+        brand = get_brand_or_404(db, brand_id)
+
+        brand.is_active = payload.is_active
+        touch_updated_at(brand)
+
+        description = (
+            "Admin activated brand"
+            if payload.is_active
+            else "Admin deactivated brand"
+        )
+
+        create_audit_log(
+            db,
+            action_by=get_actor_id(current_user),
+            action_type="brand_status_updated",
+            target_user_id=brand.user_id,
+            description=description,
+        )
+
+        db.commit()
+        db.refresh(brand)
+
+        return {
+            "message": "Brand status updated",
+            "brand": serialize_brand_list(brand),
+        }
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Could not update brand status: {str(e)}"
+        )

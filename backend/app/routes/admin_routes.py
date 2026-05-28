@@ -4,7 +4,7 @@ from sqlalchemy import text
 
 from app.auth.permissions import permission_required
 from app.auth.permission_names import VIEW_DASHBOARD
-from app.core.database import SessionLocal
+from app.core.database import get_db
 
 router = APIRouter(
     prefix="/admin",
@@ -15,8 +15,8 @@ router = APIRouter(
 @router.get("/dashboard")
 def admin_dashboard(
     current_user: dict = Depends(permission_required(VIEW_DASHBOARD)),
-):
-    db: Session = SessionLocal()
+
+    db: Session = Depends(get_db)):
 
     total_brands = db.execute(
         text("""
@@ -27,7 +27,7 @@ def admin_dashboard(
         """)
     ).scalar()
 
-    db.close()
+   
 
     return {
         "total_brands": total_brands

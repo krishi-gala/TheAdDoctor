@@ -65,9 +65,7 @@ def get_current_user(
         )
 
 
-def admin_required(
-    current_user: dict = Depends(get_current_user)
-):
+
 
     if current_user.get("role") != "admin":
         raise HTTPException(
