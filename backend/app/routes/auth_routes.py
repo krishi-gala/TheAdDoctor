@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException , Depends
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
@@ -12,63 +12,69 @@ router = APIRouter()
 
 
 @router.post("/login")
-def login(user: LoginRequest,
-
-    db: Session = Depends(get_db)):
+def login(
+    user: LoginRequest,
+    db: Session = Depends(get_db),
+):
 
     query = text("""
-        SELECT * FROM users
+        SELECT *
+        FROM users
         WHERE email = :email
     """)
 
-    result = db.execute(
+    user_record = db.execute(
         query,
         {"email": user.email}
     ).fetchone()
 
-
-
-    if not result:
+    if not user_record:
         raise HTTPException(
             status_code=401,
-            detail="Invalid Credentials"
+            detail="Invalid credentials"
         )
 
-    if getattr(result, "is_deleted", False):
+    if getattr(user_record, "is_deleted", False):
         raise HTTPException(
             status_code=401,
             detail="Account is deactivated"
         )
 
-    if not result.is_active:
+    if not user_record.is_active:
         raise HTTPException(
             status_code=401,
             detail="Account is inactive"
         )
 
-    if not verify_password(user.password, result.password_hash):
+    if not verify_password(
+        user.password,
+        user_record.password_hash
+    ):
         raise HTTPException(
             status_code=401,
-            detail="Invalid Credentials"
+            detail="Invalid credentials"
         )
 
-    role_id = getattr(result, "role_id", None)
-    permissions = resolve_user_permissions(result.role, role_id)
+    role_id = getattr(user_record, "role_id", None)
 
-    token = create_access_token(
-        {
-            "user_id": result.user_id,
-            "email": result.email,
-            "role": result.role,
-            "role_id": role_id,
-            "permissions": permissions,
-        }
+    permissions = resolve_user_permissions(
+        role_name=user_record.role,
+        role_id=role_id,
+        db=db,
     )
 
+    token = create_access_token({
+        "user_id": user_record.user_id,
+        "email": user_record.email,
+        "role": user_record.role,
+        "role_id": role_id,
+        "permissions": permissions,
+    })
+
     return {
-        "message": "Login Successful",
+        "message": "Login successful",
         "access_token": token,
         "token_type": "bearer",
-        "role": result.role,
+        "role": user_record.role,
         "permissions": permissions,
     }

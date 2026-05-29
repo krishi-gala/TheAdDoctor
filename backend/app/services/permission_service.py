@@ -1,22 +1,29 @@
 from sqlalchemy import text
+from sqlalchemy.orm import Session
 
-from app.core.database import engine
 
-
-def get_role_id_by_name(role_name: str):
+def get_role_id_by_name(
+    role_name: str,
+    db: Session
+):
     query = text("""
         SELECT role_id
         FROM roles
         WHERE role_name = :role_name
     """)
 
-    with engine.connect() as conn:
-        row = conn.execute(query, {"role_name": role_name}).fetchone()
+    row = db.execute(
+        query,
+        {"role_name": role_name}
+    ).fetchone()
 
     return row.role_id if row else None
 
 
-def get_permissions_by_role(role_id: int):
+def get_permissions_by_role(
+    role_id: int,
+    db: Session
+):
     query = text("""
         SELECT p.permission_name
         FROM role_permissions rp
@@ -25,22 +32,34 @@ def get_permissions_by_role(role_id: int):
         WHERE rp.role_id = :role_id
     """)
 
-    with engine.connect() as conn:
-        result = conn.execute(
-            query,
-            {"role_id": role_id},
-        ).fetchall()
+    result = db.execute(
+        query,
+        {"role_id": role_id},
+    ).fetchall()
 
-    return [row.permission_name for row in result]
+    return [
+        row.permission_name
+        for row in result
+    ]
 
 
-def resolve_user_permissions(role_name: str, role_id=None):
+def resolve_user_permissions(
+    role_name: str,
+    db: Session,
+    role_id=None
+):
     resolved_role_id = role_id
 
     if resolved_role_id is None:
-        resolved_role_id = get_role_id_by_name(role_name)
+        resolved_role_id = get_role_id_by_name(
+            role_name,
+            db
+        )
 
     if resolved_role_id is None:
         return []
 
-    return get_permissions_by_role(resolved_role_id)
+    return get_permissions_by_role(
+        resolved_role_id,
+        db
+    )

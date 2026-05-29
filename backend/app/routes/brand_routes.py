@@ -18,7 +18,6 @@ from app.services.brand_service import (
     base_brand_query,
     serialize_brand_detail,
     serialize_brand_list,
-    touch_updated_at,
 )
 
 router = APIRouter(
@@ -182,7 +181,7 @@ def update_brand(
         if "password" in data and data["password"]:
             brand.password_hash = hash_password(data["password"])
 
-        touch_updated_at(brand)
+       
         create_audit_log(
             db,
             action_by=get_actor_id(current_user),
@@ -215,7 +214,7 @@ def delete_brand(
 
         brand.is_deleted = True
         brand.is_active = False
-        touch_updated_at(brand)
+        
 
         create_audit_log(
             db,
@@ -251,7 +250,7 @@ def update_brand_status(
         brand = get_brand_or_404(db, brand_id)
 
         brand.is_active = payload.is_active
-        touch_updated_at(brand)
+      
 
         description = (
             "Admin activated brand"

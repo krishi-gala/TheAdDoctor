@@ -79,5 +79,4 @@ def serialize_brand_detail(user: User) -> dict:
     }
 
 
-def touch_updated_at(brand: User) -> None:
-    brand.updated_at = datetime.utcnow()
+
