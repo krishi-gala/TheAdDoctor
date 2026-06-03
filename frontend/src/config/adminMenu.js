@@ -45,6 +45,20 @@ export const ADMIN_MENU_ITEMS = [
     permission: PERMISSIONS.APPROVE_CAMPAIGNS,
   },
   {
+    id: "ad-formats",
+    label: "Ad Formats",
+    path: "/admin/ad-formats",
+    icon: Package,
+    permission: PERMISSIONS.MANAGE_BOOKINGS,
+  },
+  {
+    id: "inventory",
+    label: "Inventory Dashboard",
+    path: "/admin/inventory",
+    icon: BarChart3,
+    permission: PERMISSIONS.MANAGE_BOOKINGS,
+  },
+  {
     id: "reports",
     label: "Reports",
     path: "/admin/reports",

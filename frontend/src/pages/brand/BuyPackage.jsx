@@ -74,9 +74,9 @@ export default function BuyPackage() {
       <style>{`
         .bp-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 24px;
-          margin-top: 24px;
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+          gap: 14px;
+          margin-top: 18px;
         }
 
         .bp-header-block {

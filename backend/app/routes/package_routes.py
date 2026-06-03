@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.auth.permissions import permission_required
 
+from app.models.brand_wallet import BrandWallet
 from app.models.package import Package
 from app.models.user import User
 
@@ -92,35 +94,53 @@ def create_package(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
+    try:
+        existing = db.query(Package).filter(
+            Package.package_name == payload.package_name
+        ).first()
 
-    existing = db.query(Package).filter(
-        Package.package_name == payload.package_name
-    ).first()
+        if existing:
+            raise HTTPException(
+                status_code=400,
+                detail="Package already exists"
+            )
 
-    if existing:
+        package = Package(**payload.model_dump())
+        db.add(package)
+        db.flush()
+
+        create_audit_log(
+            db,
+            action_by=current_user["user_id"],
+            action_type="package_created",
+            description=f"Created {package.package_name}"
+        )
+
+        db.commit()
+        db.refresh(package)
+
+        return {
+            "message": "Package created successfully",
+            "package": serialize_package(package)
+        }
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except IntegrityError:
+        db.rollback()
         raise HTTPException(
             status_code=400,
             detail="Package already exists"
         )
 
-    package = Package(**payload.model_dump())
-
-    db.add(package)
-    
-    db.refresh(package)
-
-    create_audit_log(
-        db,
-        action_by=current_user["user_id"],
-        action_type="package_created",
-        description=f"Created {package.package_name}"
-    )
-    db.commit()
-
-    return {
-        "message": "Package created successfully",
-        "package": serialize_package(package)
-    }
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Could not create package: {str(exc)}"
+        )
 
 
 @router.put(
@@ -133,36 +153,69 @@ def update_package(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
+    try:
+        package = db.query(Package).filter(
+            Package.package_id == package_id
+        ).first()
 
-    package = db.query(Package).filter(
-        Package.package_id == package_id
-    ).first()
+        if not package:
+            raise HTTPException(
+                status_code=404,
+                detail="Package not found"
+            )
 
-    if not package:
-        raise HTTPException(
-            status_code=404,
-            detail="Package not found"
+        old_package_name = package.package_name
+
+        for key, value in payload.model_dump(
+            exclude_unset=True
+        ).items():
+            setattr(package, key, value)
+
+        db.flush()
+
+        if payload.package_name and payload.package_name != old_package_name:
+            (
+                db.query(User)
+                .join(BrandWallet, BrandWallet.brand_id == User.user_id)
+                .filter(BrandWallet.active_package_id == package.package_id)
+                .update(
+                    {User.package: package.package_name},
+                    synchronize_session=False,
+                )
+            )
+
+        db.commit()
+        db.refresh(package)
+
+        create_audit_log(
+            db,
+            action_by=current_user["user_id"],
+            action_type="package_updated",
+            description=f"Updated {package.package_name}"
         )
 
-    for key, value in payload.model_dump(
-        exclude_unset=True
-    ).items():
-        setattr(package, key, value)
+        return {
+            "message": "Package updated successfully",
+            "package": serialize_package(package)
+        }
 
-    db.commit()
-    db.refresh(package)
+    except HTTPException:
+        db.rollback()
+        raise
 
-    create_audit_log(
-        db,
-        action_by=current_user["user_id"],
-        action_type="package_updated",
-        description=f"Updated {package.package_name}"
-    )
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="Could not update package"
+        )
 
-    return {
-        "message": "Package updated successfully",
-        "package": serialize_package(package)
-    }
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Could not update package: {str(exc)}"
+        )
 
 
 @router.patch(

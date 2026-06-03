@@ -2,8 +2,13 @@ from typing import Literal, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
+
+from datetime import datetime, timedelta
+
+from app.models.brand_wallet import BrandWallet
+from app.models.package import Package
 from app.auth.permission_names import MANAGE_BRANDS
 from app.auth.permissions import permission_required
 from app.core.database import SessionLocal , get_db
@@ -143,7 +148,6 @@ def create_brand(
             status_code=500, detail=f"Could not create brand: {str(e)}"
         )
 
-
 @router.put("/brands/{brand_id}")
 def update_brand(
     brand_id: int,
@@ -157,31 +161,83 @@ def update_brand(
 
         if "email" in data:
             email = str(data["email"]).lower()
+
             duplicate = (
                 db.query(User)
-                .filter(User.email == email, User.user_id != brand_id)
+                .filter(
+                    User.email == email,
+                    User.user_id != brand_id
+                )
                 .first()
             )
+
             if duplicate:
                 raise HTTPException(
-                    status_code=400, detail="Email already registered"
+                    status_code=400,
+                    detail="Email already registered"
                 )
+
             brand.email = email
 
         if "company_name" in data:
             brand.company_name = data["company_name"].strip()
+
         if "phone_number" in data:
             brand.phone_number = data["phone_number"]
+
         if "business_type" in data:
             brand.business_type = data["business_type"]
+
+        # Package update (REAL source = wallet)
         if "package" in data:
-            brand.package = data["package"]
+            package_name = data["package"]
+
+            package = (
+                db.query(Package)
+                .filter(
+                    Package.package_name == package_name
+                )
+                .first()
+            )
+
+            if not package:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Invalid package selected"
+                )
+
+            wallet = brand.wallet
+
+            expiry_date = datetime.utcnow() + timedelta(
+                days=package.validity_days
+            )
+
+            if wallet:
+                wallet.active_package_id = package.package_id
+                wallet.total_credits = package.credits
+                wallet.used_credits = 0
+                wallet.package_expiry = expiry_date
+            else:
+                wallet = BrandWallet(
+                    brand_id=brand.user_id,
+                    active_package_id=package.package_id,
+                    total_credits=package.credits,
+                    used_credits=0,
+                    package_expiry=expiry_date,
+                )
+                db.add(wallet)
+
+            # temporary sync
+            brand.package = package.package_name
+
         if "is_active" in data:
             brand.is_active = data["is_active"]
-        if "password" in data and data["password"]:
-            brand.password_hash = hash_password(data["password"])
 
-       
+        if "password" in data and data["password"]:
+            brand.password_hash = hash_password(
+                data["password"]
+            )
+
         create_audit_log(
             db,
             action_by=get_actor_id(current_user),
@@ -189,55 +245,33 @@ def update_brand(
             target_user_id=brand.user_id,
             description="Admin updated brand",
         )
+
         db.commit()
         db.refresh(brand)
+
         return {
             "message": "Brand updated successfully",
             "brand": serialize_brand_list(brand),
         }
+
     except HTTPException:
         db.rollback()
         raise
+
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=400, detail="Email already registered")
-
-
-@router.delete("/brands/{brand_id}")
-def delete_brand(
-    brand_id: int,
-    current_user: dict = Depends(permission_required(MANAGE_BRANDS)),
-    db: Session = Depends(get_db),
-):
-    try:
-        brand = get_brand_or_404(db, brand_id)
-
-        brand.is_deleted = True
-        brand.is_active = False
-        
-
-        create_audit_log(
-            db,
-            action_by=get_actor_id(current_user),
-            action_type="brand_deleted",
-            target_user_id=brand.user_id,
-            description="Admin deleted brand",
+        raise HTTPException(
+            status_code=400,
+            detail="Email already registered"
         )
-
-        db.commit()
-
-        return {"message": "Brand deleted successfully"}
-
-    except HTTPException:
-        db.rollback()
-        raise
 
     except Exception as e:
         db.rollback()
         raise HTTPException(
             status_code=500,
-            detail=f"Could not delete brand: {str(e)}"
+            detail=f"Could not update brand: {str(e)}"
         )
+
 
 @router.patch("/brands/{brand_id}/status")
 def update_brand_status(

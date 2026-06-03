@@ -5,6 +5,16 @@ export const fetchAdminPackages = (params = {}) => {
   return API.get("/admin/packages", { params });
 };
 
+export const fetchPackageOptions = (params = {}) => {
+  return API.get("/admin/packages", {
+    params: {
+      status: "active",
+      page_size: 100,
+      ...params,
+    },
+  });
+};
+
 export const createPackage = (data) => {
   return API.post("/admin/packages", data);
 };

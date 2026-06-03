@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from sqlalchemy import asc, desc, or_
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session , joinedload
 
 from app.models.user import User
 
@@ -11,14 +11,16 @@ SORTABLE_FIELDS = {
     "email": User.email,
     "created_at": User.created_at,
     "is_active": User.is_active,
-    "package": User.package,
 }
 
-
 def base_brand_query(db: Session):
-    return db.query(User).filter(
-        User.role == "brand",
-        User.is_deleted == False,
+    return (
+        db.query(User)
+        .options(joinedload(User.wallet))
+        .filter(
+            User.role == "brand",
+            User.is_deleted == False,
+        )
     )
 
 
@@ -46,7 +48,24 @@ def apply_sort(query, sort_by: str, sort_dir: str):
     column = SORTABLE_FIELDS.get(sort_by, User.created_at)
     direction = asc if sort_dir == "asc" else desc
     return query.order_by(direction(column))
+def get_package_name(user: User) -> str:
+    wallet = user.wallet
 
+    if not wallet:
+        return "No Package"
+
+    # expired package
+    if wallet.package_expiry:
+        expiry = wallet.package_expiry.replace(tzinfo=None)
+
+        if expiry < datetime.utcnow():
+            return "Expired"
+
+    # active package
+    if wallet.active_package:
+        return wallet.active_package.package_name
+
+    return "No Package"
 
 def serialize_brand_list(user: User) -> dict:
     return {
@@ -55,9 +74,13 @@ def serialize_brand_list(user: User) -> dict:
         "email": user.email,
         "phone_number": user.phone_number,
         "business_type": user.business_type,
-        "package": user.package,
+        "package": get_package_name(user),
         "is_active": user.is_active,
-        "created_at": user.created_at.isoformat() if user.created_at else None,
+        "created_at": (
+            user.created_at.isoformat()
+            if user.created_at
+            else None
+        ),
     }
 
 
@@ -68,7 +91,7 @@ def serialize_brand_detail(user: User) -> dict:
         "email": user.email,
         "phone_number": user.phone_number,
         "business_type": user.business_type,
-        "package": user.package,
+        "package": get_package_name(user),
         "status": "active" if user.is_active else "inactive",
         "is_active": user.is_active,
         "created_at": user.created_at.isoformat() if user.created_at else None,

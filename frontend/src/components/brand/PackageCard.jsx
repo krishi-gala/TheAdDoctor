@@ -42,8 +42,8 @@ export default function PackageCard({ pkg, onPurchase, purchasingId }) {
         .pc-card {
           background: rgba(255, 255, 255, 0.05);
           border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 24px;
-          padding: 32px 28px;
+          border-radius: 20px;
+          padding: 24px 20px;
           display: flex;
           flex-direction: column;
           position: relative;
@@ -58,9 +58,9 @@ export default function PackageCard({ pkg, onPurchase, purchasingId }) {
         }
 
         .pc-badge {
-          position: absolute; top: 20px; right: -30px;
+          position: absolute; top: 18px; right: -26px;
           transform: rotate(45deg);
-          width: 120px; text-align: center;
+          width: 100px; text-align: center;
           background: var(--gradient);
           color: #fff; font-size: 10px; font-weight: 700;
           padding: 4px 0; text-transform: uppercase;
@@ -69,40 +69,40 @@ export default function PackageCard({ pkg, onPurchase, purchasingId }) {
         }
 
         .pc-title {
-          font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.95);
+          font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.95);
           margin-bottom: 6px;
         }
 
         .pc-price-row {
           display: flex; align-items: baseline; gap: 4px;
-          margin-top: 14px; margin-bottom: 24px;
+          margin-top: 12px; margin-bottom: 20px;
         }
-        .pc-price-symbol { font-size: 20px; font-weight: 600; color: #fff; }
-        .pc-price { font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -1px; }
-        .pc-price-term { font-size: 13px; color: rgba(255,255,255,0.4); margin-left: 4px; }
+        .pc-price-symbol { font-size: 18px; font-weight: 600; color: #fff; }
+        .pc-price { font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+        .pc-price-term { font-size: 12px; color: rgba(255,255,255,0.4); margin-left: 4px; }
 
         .pc-credits-box {
           background: rgba(255,255,255,0.04);
           border: 1px solid rgba(255,255,255,0.06);
-          border-radius: 14px; padding: 12px 16px;
-          margin-bottom: 24px;
+          border-radius: 14px; padding: 10px 14px;
+          margin-bottom: 20px;
         }
-        .pc-credits-num { font-size: 22px; font-weight: 800; color: #fff; }
-        .pc-credits-label { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 600; }
+        .pc-credits-num { font-size: 20px; font-weight: 800; color: #fff; }
+        .pc-credits-label { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 600; }
 
         .pc-divider { height: 1px; background: rgba(255,255,255,0.08); margin-bottom: 24px; }
 
-        .pc-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; flex: 1; }
-        .pc-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: rgba(255,255,255,0.7); }
+        .pc-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; flex: 1; }
+        .pc-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: rgba(255,255,255,0.75); }
         .pc-icon { color: #38bdf8; flex-shrink: 0; margin-top: 2px; }
 
         .pc-btn {
-          width: 100%; height: 48px; border-radius: 14px; border: none;
+          width: 100%; height: 42px; border-radius: 14px; border: none;
           background: var(--gradient);
           color: white; font-weight: 700; cursor: pointer;
           transition: opacity 0.2s, transform 0.15s;
           display: flex; align-items: center; justify-content: center;
-          gap: 8px; font-family: 'Inter', sans-serif;
+          gap: 8px; font-family: 'Inter', sans-serif; font-size: 13px;
         }
         .pc-btn:hover:not(:disabled) { opacity: 0.95; transform: scale(0.98); }
         .pc-btn:disabled { opacity: 0.65; cursor: not-allowed; }
@@ -122,14 +122,21 @@ export default function PackageCard({ pkg, onPurchase, purchasingId }) {
           "--glow-color-shadow": borderGlow(pkg.package_name).replace("0.3", "0.1"),
         }}
       >
-        {pkg.credits >= 300 && (
-          <div
-            className="pc-badge"
-            style={{ "--gradient": getGradient(pkg.package_name) }}
-          >
-            Best Value
-          </div>
-        )}
+       {pkg.credits >= 700 ? (
+  <div
+    className="pc-badge"
+    style={{ "--gradient": getGradient(pkg.package_name) }}
+  >
+     best value
+  </div>
+) : pkg.credits >= 300 ? (
+  <div
+    className="pc-badge"
+    style={{ "--gradient": getGradient(pkg.package_name) }}
+  >
+     Popular
+  </div>
+) : null}
 
         <div className="pc-title">{pkg.package_name}</div>
         

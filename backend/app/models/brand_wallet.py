@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-
+from app.models.package import Package
 from sqlalchemy import (
     Column,
     DateTime,
@@ -45,6 +45,9 @@ class BrandWallet(Base):
         "User",
         back_populates="wallet"
     )
+    active_package = relationship(
+    "Package"
+)
 
     # Computed field
     @property

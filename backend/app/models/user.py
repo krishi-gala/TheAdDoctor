@@ -32,13 +32,7 @@ class User(Base):
     # Keep package for now (temporary)
     package = Column(String(100), nullable=True)
 
-    # New package relationship
-    active_package_id = Column(
-        Integer,
-        ForeignKey("packages.package_id"),
-        nullable=True
-    )
-
+   
     created_at = Column(
         DateTime,
         default=lambda: datetime.now(timezone.utc)
@@ -62,6 +56,4 @@ class User(Base):
         back_populates="brand"
     )
 
-    active_package = relationship(
-        "Package"
-    )
+  

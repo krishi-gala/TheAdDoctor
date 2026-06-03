@@ -37,7 +37,7 @@ def serialize_wallet(db: Session, wallet: Optional[BrandWallet], user: User) -> 
         }
 
     expired = is_wallet_expired(wallet)
-    active_pkg = get_active_package(db, wallet.active_package_id)
+    active_pkg = wallet.active_package or get_active_package(db, wallet.active_package_id)
     remaining = 0 if expired else (wallet.remaining_credits or 0)
 
     return {
@@ -67,7 +67,7 @@ def apply_purchase_to_wallet(
         wallet.active_package_id = package.package_id
         wallet.total_credits = credits
         wallet.used_credits = 0
-        wallet.remaining_credits = credits
+        
         wallet.package_expiry = expiry_date
         wallet.updated_at = datetime.utcnow()
     else:
@@ -76,7 +76,7 @@ def apply_purchase_to_wallet(
             active_package_id=package.package_id,
             total_credits=credits,
             used_credits=0,
-            remaining_credits=credits,
+        
             package_expiry=expiry_date,
         )
         db.add(wallet)

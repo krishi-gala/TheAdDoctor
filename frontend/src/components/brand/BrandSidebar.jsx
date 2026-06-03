@@ -25,6 +25,13 @@ const BRAND_MENU_ITEMS = [
     icon: History,
     permission: PERMISSIONS.PURCHASE_PACKAGE,
   },
+  {
+    id: "ad-formats",
+    label: "Ad Formats",
+    path: "/brand/ad-formats",
+    icon: ShoppingBag,
+    permission: PERMISSIONS.PURCHASE_PACKAGE,
+  },
 ];
 
 export default function BrandSidebar() {

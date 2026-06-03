@@ -12,6 +12,9 @@ import PackagesPage from "./pages/admin/PackagesPage";
 import BuyPackage from "./pages/brand/BuyPackage";
 import TransactionHistory from "./components/brand/TransactionHistory";
 import AdminPlaceholder from "./pages/admin/AdminPlaceholder";
+import AdminAdFormats from "./pages/admin/AdminAdFormats";
+import InventoryDashboard from "./pages/admin/InventoryDashboard";
+import BrandFormats from "./pages/brand/BrandFormats";
 import { PERMISSIONS, BRAND_PERMISSIONS } from "./constants/permissions";
 
 const ADMIN_ACCESS_PERMISSIONS = [
@@ -72,6 +75,22 @@ function App() {
             }
           />
           <Route
+            path="ad-formats"
+            element={
+              <ProtectedRoute permission={PERMISSIONS.MANAGE_BOOKINGS}>
+                <AdminAdFormats />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="inventory"
+            element={
+              <ProtectedRoute permission={PERMISSIONS.MANAGE_BOOKINGS}>
+                <InventoryDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="campaigns"
             element={
               <ProtectedRoute permission={PERMISSIONS.APPROVE_CAMPAIGNS}>
@@ -104,6 +123,14 @@ function App() {
             element={
               <ProtectedRoute permission={PERMISSIONS.PURCHASE_PACKAGE}>
                 <BuyPackage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="ad-formats"
+            element={
+              <ProtectedRoute permission={PERMISSIONS.PURCHASE_PACKAGE}>
+                <BrandFormats />
               </ProtectedRoute>
             }
           />

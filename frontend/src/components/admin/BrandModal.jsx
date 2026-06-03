@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { fetchPackageOptions } from "../../services/packages";
 
 const BUSINESS_TYPES = [
   "Retail",
@@ -10,8 +11,6 @@ const BUSINESS_TYPES = [
   "Technology",
   "Other",
 ];
-
-const PACKAGES = ["Starter", "Growth", "Pro", "Enterprise"];
 
 const EMPTY_FORM = {
   company_name: "",
@@ -26,9 +25,27 @@ const EMPTY_FORM = {
 export default function BrandModal({ open, mode, brand, onClose, onSave, saving }) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
+  const [packages, setPackages] = useState([]);
+  const [packagesLoading, setPackagesLoading] = useState(false);
+
+  const fetchPackages = async () => {
+    setPackagesLoading(true);
+
+    try {
+      const response = await fetchPackageOptions({ status: "active", page_size: 100 });
+      setPackages(response.data?.packages || []);
+    } catch (err) {
+      console.error("Failed to fetch package options", err);
+      setPackages([]);
+    } finally {
+      setPackagesLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!open) return;
+
+    fetchPackages();
 
     if (mode === "edit" && brand) {
       setForm({
@@ -296,10 +313,15 @@ export default function BrandModal({ open, mode, brand, onClose, onSave, saving 
                   value={form.package}
                   onChange={(e) => handleChange("package", e.target.value)}
                 >
-                  <option value="">Select package</option>
-                  {PACKAGES.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
+                  <option value="" disabled={packagesLoading}>
+                    {packagesLoading ? "Loading packages..." : "Select package"}
+                  </option>
+                  {form.package && !packages.some((pkg) => pkg.package_name === form.package) && (
+                    <option value={form.package}>{form.package}</option>
+                  )}
+                  {packages.map((pkg) => (
+                    <option key={pkg.package_id} value={pkg.package_name}>
+                      {pkg.package_name}
                     </option>
                   ))}
                 </select>
