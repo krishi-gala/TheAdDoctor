@@ -67,10 +67,3 @@ def get_current_user(
 
 
 
-    if current_user.get("role") != "admin":
-        raise HTTPException(
-            status_code=403,
-            detail="Admin Access Required"
-        )
-
-    return current_user

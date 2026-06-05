@@ -3,12 +3,24 @@ import { X } from "lucide-react";
 import { fetchPackageOptions } from "../../services/packages";
 
 const BUSINESS_TYPES = [
-  "Retail",
+    "Retail",
   "E-commerce",
   "Healthcare",
   "Finance",
   "Education",
   "Technology",
+  "Food & Beverage",
+  "Travel & Hospitality",
+  "Beauty & Fashion",
+  "Fitness & Wellness",
+  "Real Estate",
+  "Entertainment & Media",
+  "Local Business",
+  "Professional Services",
+  "Automobile",
+  "Home Decor & Furniture",
+  "Jewelry & Luxury",
+  "Non-Profit",
   "Other",
 ];
 
