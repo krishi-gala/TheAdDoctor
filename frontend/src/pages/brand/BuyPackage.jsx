@@ -4,6 +4,7 @@ import { Loader2, RotateCcw } from "lucide-react";
 import { fetchBrandPackages, purchasePackage } from "../../services/packages";
 import PackageCard from "../../components/brand/PackageCard";
 import ConfirmModal from "../../components/admin/ConfirmModal";
+import "./BuyPackage.css";
 
 export default function BuyPackage() {
   const [packages, setPackages] = useState([]);
@@ -71,87 +72,35 @@ export default function BuyPackage() {
 
   return (
     <>
-      <style>{`
-        .bp-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-          gap: 14px;
-          margin-top: 18px;
-        }
-
-        .bp-header-block {
-          text-align: center; margin-bottom: 40px; margin-top: 10px;
-        }
-        .bp-subtitle {
-          font-size: 15px; color: rgba(255,255,255,0.45); max-width: 600px;
-          margin: 12px auto 0; line-height: 1.5;
-        }
-
-        .bp-loader, .bp-error, .bp-empty {
-          text-align: center; padding: 64px 24px; color: rgba(255,255,255,0.45);
-        }
-        .bp-error { color: #f87171; }
-        .bp-retry-btn {
-          margin-top: 16px; height: 42px; padding: 0 18px; border: 1px solid rgba(255,255,255,0.1);
-          background: rgba(255,255,255,0.06); color: white; border-radius: 12px;
-          cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-          font-family: 'Inter', sans-serif; font-size: 14px;
-        }
-
-        .bp-toast {
-          position: fixed; bottom: 28px; right: 28px; z-index: 200;
-          padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500;
-          backdrop-filter: blur(12px);
-          animation: bp-slide-in 0.25s ease;
-        }
-        .bp-toast.success {
-          background: rgba(34,197,94,0.2); border: 1px solid rgba(34,197,94,0.35);
-          color: #4ade80;
-        }
-        .bp-toast.error {
-          background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.35);
-          color: #f87171;
-        }
-        @keyframes bp-slide-in {
-          from { transform: translateY(12px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-      `}</style>
+      {/* Styles moved to BuyPackage.css (bpkg- prefix) */}
 
       <div>
-        <div className="bp-header-block">
-          <p className="bp-subtitle">
+        <div className="bpkg-header-block">
+          <p className="bpkg-subtitle">
             Scale your brand's footprint. Choose a credit package to start deploying high-converting ad campaigns.
           </p>
         </div>
 
         {loading ? (
-          <div className="bp-loader">
-            <Loader2
-              size={36}
-              style={{
-                animation: "spin 1s linear infinite",
-                margin: "0 auto 12px",
-                display: "block",
-              }}
-            />
+          <div className="bpkg-loader">
+            <Loader2 size={36} className="bpkg-loader-icon" />
             <span>Loading packages...</span>
           </div>
         ) : error ? (
-          <div className="bp-error">
+          <div className="bpkg-error">
             <span>{error}</span>
             <br />
-            <button type="button" className="bp-retry-btn" onClick={loadPackages}>
+            <button type="button" className="bpkg-retry-btn" onClick={loadPackages}>
               <RotateCcw size={16} />
               Retry
             </button>
           </div>
         ) : packages.length === 0 ? (
-          <div className="bp-empty">
+          <div className="bpkg-empty">
             <span>No credit packages are currently available for purchase.</span>
           </div>
         ) : (
-          <div className="bp-grid">
+          <div className="bpkg-grid">
             {packages.map((pkg) => (
               <PackageCard
                 key={pkg.package_id}
@@ -184,7 +133,7 @@ export default function BuyPackage() {
       />
 
       {toast && (
-        <div className={`bp-toast ${toast.type}`}>{toast.message}</div>
+        <div className={`bpkg-toast ${toast.type}`}>{toast.message}</div>
       )}
     </>
   );

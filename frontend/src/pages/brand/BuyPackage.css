@@ -1,0 +1,48 @@
+/* Isolated BuyPackage styles (prefix: bpkg-) */
+.bpkg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.bpkg-header-block {
+  text-align: center; margin-bottom: 40px; margin-top: 10px;
+}
+.bpkg-subtitle {
+  font-size: 15px; color: rgba(255,255,255,0.45); max-width: 600px;
+  margin: 12px auto 0; line-height: 1.5;
+}
+
+.bpkg-loader, .bpkg-error, .bpkg-empty {
+  text-align: center; padding: 64px 24px; color: rgba(255,255,255,0.45);
+}
+.bpkg-error { color: #f87171; }
+.bpkg-retry-btn {
+  margin-top: 16px; height: 42px; padding: 0 18px; border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06); color: white; border-radius: 12px;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Inter', sans-serif; font-size: 14px;
+}
+
+.bpkg-toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 200;
+  padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500;
+  backdrop-filter: blur(12px);
+  animation: bpkg-slide-in 0.25s ease;
+}
+.bpkg-toast.success {
+  background: rgba(34,197,94,0.2); border: 1px solid rgba(34,197,94,0.35);
+  color: #4ade80;
+}
+.bpkg-toast.error {
+  background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.35);
+  color: #f87171;
+}
+@keyframes bpkg-slide-in {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bpkg-spin { to { transform: rotate(360deg); } }
+.bpkg-loader-icon { animation: bpkg-spin 1s linear infinite; margin: 0 auto 12px; display: block; }

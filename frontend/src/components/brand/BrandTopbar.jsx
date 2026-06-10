@@ -17,10 +17,10 @@ export default function BrandTopbar({ pageTitle = "Dashboard", walletState }) {
           </div>
 
         <div className="btb-right">
-          {walletState && walletState.credits_remaining !== undefined && (
+          {walletState && walletState.remaining_credits !== undefined && (
             <div className="btb-credits-badge">
               <span className="btb-credits-label">Balance</span>
-              <span className="btb-credits-val">{walletState.credits_remaining} Credits</span>
+              <span className="btb-credits-val">{walletState.remaining_credits} Credits</span>
             </div>
           )}
 

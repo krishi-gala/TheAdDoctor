@@ -1,0 +1,152 @@
+/* Isolated admin package table styles (prefix: apkg-) */
+.apkg-wrap { margin-top: 34px; }
+.apkg-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 22px; flex-wrap: wrap; gap: 16px;
+}
+.apkg-title { font-size: 24px; font-weight: 700; color: #fff; }
+.apkg-subtitle { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+.apkg-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.apkg-search { position: relative; }
+.apkg-search input {
+  width: 240px; height: 42px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06); color: #fff;
+  padding: 0 14px 0 42px; outline: none; font-family: 'Inter', sans-serif;
+}
+.apkg-search input::placeholder { color: rgba(255,255,255,0.3); }
+.apkg-search-icon {
+  position: absolute; top: 50%; left: 14px;
+  transform: translateY(-50%); color: rgba(255,255,255,0.4);
+}
+.apkg-filter, .apkg-retry {
+  height: 42px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06); color: #fff;
+  padding: 0 14px; outline: none; font-family: 'Inter', sans-serif;
+  font-size: 13px; cursor: pointer;
+}
+.apkg-filter option { background: #1e1550; }
+.apkg-retry {
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.apkg-btn {
+  height: 42px; padding: 0 18px; border: none; border-radius: 12px;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: white; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif;
+}
+.apkg-table-wrap {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px; overflow: hidden; backdrop-filter: blur(18px);
+}
+.apkg-table {
+  width: 100%; border-collapse: collapse;
+  table-layout: fixed;
+}
+.apkg-table th {
+  text-align: left; padding: 18px 24px; font-size: 13px;
+  color: rgba(255,255,255,0.45); font-weight: 600;
+}
+.apkg-table th.apkg-sortable {
+  cursor: pointer; user-select: none;
+  transition: color 0.15s;
+}
+.apkg-table th.apkg-sortable:hover { color: rgba(255,255,255,0.7); }
+.apkg-table th.apkg-sorted { color: #c4b5fd; }
+.apkg-col-name { width: 30%; }
+.apkg-col-price { width: 15%; }
+.apkg-col-credits { width: 15%; }
+.apkg-col-validity { width: 15%; }
+.apkg-col-status { width: 10%; }
+.apkg-table th.apkg-col-status,
+.apkg-table td.apkg-td-status {
+  text-align: center;
+}
+.apkg-col-actions { width: 15%; }
+.apkg-table td {
+  padding: 18px 24px; border-top: 1px solid rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.88); font-size: 14px;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.apkg-table td.apkg-td-actions {
+  overflow: visible;
+}
+.apkg-name { font-weight: 600; color: #fff; }
+.apkg-description { font-size: 12px; color: rgba(255,255,255,0.38); margin-top: 2px; }
+.apkg-status-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 10px;
+  border: 1px solid transparent; cursor: pointer;
+  background: rgba(255,255,255,0.06);
+  transition: background 0.15s, color 0.15s;
+}
+.apkg-status-icon.active {
+  color: #4ade80;
+  border-color: rgba(34,197,94,0.25);
+}
+.apkg-status-icon.inactive {
+  color: #f87171;
+  border-color: rgba(239,68,68,0.25);
+}
+.apkg-status-icon:hover { background: rgba(255,255,255,0.1); }
+.apkg-actions-cell {
+  display: flex; gap: 8px; align-items: center;
+  justify-content: flex-end;
+}
+.apkg-icon-btn {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+.apkg-icon-btn:hover {
+  background: rgba(255,255,255,0.12); color: #fff;
+}
+.apkg-empty, .apkg-error-cell, .apkg-loading {
+  padding: 48px 24px; text-align: center;
+  color: rgba(255,255,255,0.45); font-size: 14px;
+}
+.apkg-loader-icon { animation: apkg-spin 1s linear infinite; display:block; margin:0 auto 8px; }
+.apkg-error-cell { color: #f87171; }
+.apkg-error-cell button { margin-top: 12px; }
+@keyframes apkg-spin { to { transform: rotate(360deg); } }
+.apkg-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.06);
+}
+.apkg-count { font-size: 13px; color: rgba(255,255,255,0.4); }
+.apkg-pagination { display: flex; gap: 8px; align-items: center; }
+.apkg-page-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.apkg-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.apkg-page-btn:not(:disabled):hover { background: rgba(255,255,255,0.12); color: #fff; }
+.apkg-page-num { font-size: 13px; color: rgba(255,255,255,0.5); min-width: 80px; text-align: center; }
+.apkg-toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 200;
+  padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500;
+  backdrop-filter: blur(12px);
+  animation: apkg-slide-in 0.25s ease;
+}
+.apkg-toast.success {
+  background: rgba(34,197,94,0.2); border: 1px solid rgba(34,197,94,0.35);
+  color: #4ade80;
+}
+.apkg-toast.error {
+  background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.35);
+  color: #f87171;
+}
+@keyframes apkg-slide-in {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

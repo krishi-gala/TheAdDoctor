@@ -1,11 +1,11 @@
-.bd-grid {
+.brand-dashboard-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 32px;
 }
 
-.bd-card {
+.brand-dashboard-card {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 20px;
@@ -15,7 +15,7 @@
   overflow: hidden;
 }
 
-.bd-card-glow {
+.brand-dashboard-card-glow {
   position: absolute;
   top: 0;
   left: 10%;
@@ -24,26 +24,26 @@
   background: linear-gradient(90deg, transparent, var(--glow-color), transparent);
 }
 
-.bd-card--blue {
+.brand-dashboard-card--blue {
   --glow-color: #38bdf8;
 }
 
-.bd-card--purple {
+.brand-dashboard-card--purple {
   --glow-color: #a78bfa;
 }
 
-.bd-card--green {
+.brand-dashboard-card--green {
   --glow-color: #34d399;
 }
 
-.bd-card-header {
+.brand-dashboard-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.bd-icon-wrap {
+.brand-dashboard-icon-wrap {
   width: 42px;
   height: 42px;
   border-radius: 12px;
@@ -54,36 +54,36 @@
   color: var(--icon-color, #fff);
 }
 
-.bd-icon-wrap--blue {
+.brand-dashboard-icon-wrap--blue {
   --icon-bg: rgba(56,189,248,0.12);
   --icon-color: #38bdf8;
 }
 
-.bd-icon-wrap--purple {
+.brand-dashboard-icon-wrap--purple {
   --icon-bg: rgba(167,139,250,0.12);
   --icon-color: #a78bfa;
 }
 
-.bd-icon-wrap--green {
+.brand-dashboard-icon-wrap--green {
   --icon-bg: rgba(52,211,153,0.12);
   --icon-color: #34d399;
 }
 
-.bd-label {
+.brand-dashboard-label {
   font-size: 12.5px;
   color: rgba(255,255,255,0.4);
   font-weight: 500;
   margin-bottom: 6px;
 }
 
-.bd-value {
+.brand-dashboard-value {
   font-size: 28px;
   font-weight: 800;
   color: #fff;
   line-height: 1.1;
 }
 
-.bd-meta {
+.brand-dashboard-meta {
   font-size: 12px;
   color: rgba(255,255,255,0.35);
   margin-top: 8px;
@@ -92,7 +92,7 @@
   gap: 4px;
 }
 
-.bd-progress-bar-bg {
+.brand-dashboard-progress-bar-bg {
   height: 6px;
   background: rgba(255,255,255,0.06);
   border-radius: 99px;
@@ -100,22 +100,22 @@
   overflow: hidden;
 }
 
-.bd-progress-bar-fill {
+.brand-dashboard-progress-bar-fill {
   height: 100%;
   background: linear-gradient(90deg, #38bdf8, #0284c7);
   border-radius: 99px;
   transition: width 0.4s ease;
 }
 
-.bd-progress-bar-fill--purple {
+.brand-dashboard-progress-bar-fill--purple {
   background: linear-gradient(90deg, #a78bfa, #8b5cf6);
 }
 
-.bd-progress-bar-fill--green {
+.brand-dashboard-progress-bar-fill--green {
   background: linear-gradient(90deg, #34d399, #059669);
 }
 
-.bd-alert-banner {
+.brand-dashboard-alert-banner {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -127,14 +127,14 @@
   color: #f87171;
 }
 
-.bd-alert-banner-left {
+.brand-dashboard-alert-banner-left {
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: 14px;
 }
 
-.bd-alert-cta {
+.brand-dashboard-alert-cta {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -148,11 +148,11 @@
   transition: background 0.2s;
 }
 
-.bd-alert-cta:hover {
+.brand-dashboard-alert-cta:hover {
   background: #dc2626;
 }
 
-.bd-status-badge {
+.brand-dashboard-status-badge {
   font-size: 10px;
   padding: 3px 8px;
   border-radius: 10px;
@@ -160,39 +160,39 @@
   display: inline-flex;
 }
 
-.bd-status-badge--expired {
+.brand-dashboard-status-badge--expired {
   background: rgba(239,68,68,0.15);
   color: #f87171;
   border: 1px solid rgba(239,68,68,0.3);
 }
 
-.bd-status-badge--active {
+.brand-dashboard-status-badge--active {
   background: rgba(34,197,94,0.15);
   color: #4ade80;
   border: 1px solid rgba(34,197,94,0.3);
 }
 
-.bd-status-text {
+.brand-dashboard-status-text {
   font-size: 12px;
   color: rgba(255,255,255,0.4);
 }
 
-.bd-skeleton-grid {
+.brand-dashboard-skeleton-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 32px;
 }
 
-.bd-skeleton-card {
+.brand-dashboard-skeleton-card {
   height: 138px;
   border-radius: 20px;
   background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
   background-size: 200% 100%;
-  animation: bd-shimmer 1.5s infinite;
+  animation: brand-dashboard-shimmer 1.5s infinite;
 }
 
-@keyframes bd-shimmer {
+@keyframes brand-dashboard-shimmer {
   0% {
     background-position: 200% 0;
   }
@@ -202,8 +202,8 @@
 }
 
 @media (max-width: 900px) {
-  .bd-grid,
-  .bd-skeleton-grid {
+  .brand-dashboard-grid,
+  .brand-dashboard-skeleton-grid {
     grid-template-columns: 1fr;
   }
 }

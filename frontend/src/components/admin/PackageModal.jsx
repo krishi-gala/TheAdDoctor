@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import "./PackageModal.css";
 
 const EMPTY_FORM = {
   package_name: "",
@@ -81,102 +82,6 @@ export default function PackageModal({ open, mode, packageData, onClose, onSave,
   };
 
   return (
-    <>
-      <style>{`
-        .pkg-overlay {
-          position: fixed; inset: 0; z-index: 100;
-          background: rgba(15, 10, 40, 0.65);
-          backdrop-filter: blur(6px);
-          display: flex; align-items: center; justify-content: center;
-          padding: 24px;
-        }
-        .pkg-modal {
-          width: 100%; max-width: 500px;
-          background: rgba(30, 20, 70, 0.92);
-          border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 24px;
-          backdrop-filter: blur(24px);
-          box-shadow: 0 24px 80px rgba(0,0,0,0.45);
-          overflow: hidden;
-        }
-        .pkg-modal-head {
-          display: flex; justify-content: space-between; align-items: center;
-          padding: 24px 28px 0;
-        }
-        .pkg-modal-title {
-          font-size: 20px; font-weight: 700; color: #fff;
-        }
-        .pkg-modal-sub {
-          font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px;
-        }
-        .pkg-close {
-          width: 36px; height: 36px; border-radius: 10px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.6); cursor: pointer;
-          display: flex; align-items: center; justify-content: center;
-        }
-        .pkg-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        .pkg-form { padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 16px; }
-        .pkg-field { display: flex; flex-direction: column; gap: 6px; }
-        .pkg-label {
-          font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.55);
-          text-transform: uppercase; letter-spacing: 0.04em;
-        }
-        .pkg-input, .pkg-textarea {
-          height: 44px; border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.1);
-          background: rgba(255,255,255,0.06);
-          color: #fff; padding: 0 14px;
-          font-family: 'Inter', sans-serif; font-size: 14px; outline: none;
-        }
-        .pkg-textarea {
-          height: auto; min-height: 80px; padding: 12px 14px; resize: vertical;
-        }
-        .pkg-input:focus, .pkg-textarea:focus {
-          border-color: rgba(167,139,250,0.5);
-          box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
-        }
-        .pkg-error { font-size: 12px; color: #f87171; }
-        .pkg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .pkg-toggle-row {
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 12px 14px; border-radius: 12px;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.08);
-        }
-        .pkg-toggle-label { font-size: 14px; color: rgba(255,255,255,0.85); }
-        .pkg-toggle {
-          width: 44px; height: 24px; border-radius: 999px;
-          background: rgba(255,255,255,0.15); border: none; cursor: pointer;
-          position: relative; transition: background 0.2s;
-        }
-        .pkg-toggle.on { background: #7c3aed; }
-        .pkg-toggle-knob {
-          position: absolute; top: 3px; left: 3px;
-          width: 18px; height: 18px; border-radius: 50%;
-          background: #fff; transition: transform 0.2s;
-        }
-        .pkg-toggle.on .pkg-toggle-knob { transform: translateX(20px); }
-        .pkg-actions {
-          display: flex; gap: 12px; margin-top: 8px;
-        }
-        .pkg-btn-cancel {
-          flex: 1; height: 44px; border-radius: 12px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.7); font-weight: 600; cursor: pointer;
-          font-family: 'Inter', sans-serif;
-        }
-        .pkg-btn-save {
-          flex: 1; height: 44px; border-radius: 12px; border: none;
-          background: linear-gradient(135deg, #7c3aed, #4f46e5);
-          color: #fff; font-weight: 600; cursor: pointer;
-          font-family: 'Inter', sans-serif;
-        }
-        .pkg-btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
-      `}</style>
-
       <div className="pkg-overlay" onClick={onClose}>
         <div className="pkg-modal" onClick={(e) => e.stopPropagation()}>
           <div className="pkg-modal-head">
@@ -253,8 +158,8 @@ export default function PackageModal({ open, mode, packageData, onClose, onSave,
                 )}
               </div>
 
-              <div className="pkg-field" style={{ justifyContent: "center" }}>
-                <div className="pkg-toggle-row" style={{ marginTop: 20 }}>
+              <div className="pkg-field">
+                <div className="pkg-toggle-row">
                   <span className="pkg-toggle-label">Active</span>
                   <button
                     type="button"
@@ -292,6 +197,6 @@ export default function PackageModal({ open, mode, packageData, onClose, onSave,
           </form>
         </div>
       </div>
-    </>
+    
   );
 }

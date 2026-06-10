@@ -7,6 +7,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { fetchBrandById } from "../../services/brands";
+import "./BrandDetailsDrawer.css";
 
 function formatDate(value) {
   if (!value) return "—";
@@ -57,75 +58,6 @@ export default function BrandDetailsDrawer({ open, brandId, onClose }) {
 
   return (
     <>
-      <style>{`
-        .bd-overlay {
-          position: fixed; inset: 0; z-index: 100;
-          background: rgba(15, 10, 40, 0.55);
-          backdrop-filter: blur(4px);
-        }
-        .bd-drawer {
-          position: fixed; top: 0; right: 0; bottom: 0; z-index: 101;
-          width: 100%; max-width: 440px;
-          background: rgba(30, 20, 70, 0.96);
-          border-left: 1px solid rgba(255,255,255,0.12);
-          box-shadow: -12px 0 48px rgba(0,0,0,0.35);
-          display: flex; flex-direction: column;
-          animation: bd-slide 0.25s ease;
-        }
-        @keyframes bd-slide {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
-        }
-        .bd-head {
-          display: flex; justify-content: space-between; align-items: flex-start;
-          padding: 28px 28px 20px;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-        .bd-title { font-size: 20px; font-weight: 700; color: #fff; }
-        .bd-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px; }
-        .bd-close {
-          width: 36px; height: 36px; border-radius: 10px;
-          background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.6); cursor: pointer;
-          display: flex; align-items: center; justify-content: center;
-        }
-        .bd-body { flex: 1; overflow-y: auto; padding: 24px 28px 32px; }
-        .bd-section {
-          font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
-          text-transform: uppercase; color: rgba(255,255,255,0.35);
-          margin: 20px 0 12px;
-        }
-        .bd-section:first-child { margin-top: 0; }
-        .bd-row {
-          display: flex; justify-content: space-between; gap: 16px;
-          padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .bd-label { font-size: 13px; color: rgba(255,255,255,0.45); }
-        .bd-value {
-          font-size: 14px; color: rgba(255,255,255,0.9);
-          text-align: right; font-weight: 500;
-        }
-        .bd-status {
-          padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
-        }
-        .bd-status.active { background: rgba(34,197,94,0.15); color: #4ade80; }
-        .bd-status.inactive { background: rgba(239,68,68,0.15); color: #f87171; }
-        .bd-future {
-          padding: 14px; border-radius: 12px; margin-top: 8px;
-          background: rgba(255,255,255,0.04);
-          border: 1px dashed rgba(255,255,255,0.12);
-          display: flex; align-items: center; gap: 12px;
-          color: rgba(255,255,255,0.4); font-size: 13px;
-        }
-        .bd-future strong { color: rgba(255,255,255,0.65); display: block; }
-        .bd-loading, .bd-error {
-          padding: 48px 28px; text-align: center;
-          color: rgba(255,255,255,0.5); font-size: 14px;
-        }
-        .bd-error { color: #f87171; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-      `}</style>
-
       <div className="bd-overlay" onClick={onClose} />
       <aside className="bd-drawer">
         <div className="bd-head">

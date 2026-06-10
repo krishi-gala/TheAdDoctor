@@ -18,6 +18,7 @@ import {
   updatePackage,
   updatePackageStatus,
 } from "../../services/packages";
+import "./PackageTable.css";
 
 const PAGE_SIZE = 8;
 
@@ -159,171 +160,20 @@ export default function PackageTable({ onPackagesChange }) {
 
   return (
     <>
-      <style>{`
-        .pk-wrap { margin-top: 34px; }
-        .pk-head {
-          display: flex; justify-content: space-between; align-items: flex-start;
-          margin-bottom: 22px; flex-wrap: wrap; gap: 16px;
-        }
-        .pk-title { font-size: 24px; font-weight: 700; color: #fff; }
-        .pk-subtitle { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px; }
-        .pk-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-        .pk-search { position: relative; }
-        .pk-search input {
-          width: 240px; height: 42px; border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.1);
-          background: rgba(255,255,255,0.06); color: #fff;
-          padding: 0 14px 0 42px; outline: none; font-family: 'Inter', sans-serif;
-        }
-        .pk-search input::placeholder { color: rgba(255,255,255,0.3); }
-        .pk-search-icon {
-          position: absolute; top: 50%; left: 14px;
-          transform: translateY(-50%); color: rgba(255,255,255,0.4);
-        }
-        .pk-filter, .pk-retry {
-          height: 42px; border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.1);
-          background: rgba(255,255,255,0.06); color: #fff;
-          padding: 0 14px; outline: none; font-family: 'Inter', sans-serif;
-          font-size: 13px; cursor: pointer;
-        }
-        .pk-filter option { background: #1e1550; }
-        .pk-retry {
-          display: inline-flex; align-items: center; gap: 6px;
-        }
-        .pk-btn {
-          height: 42px; padding: 0 18px; border: none; border-radius: 12px;
-          background: linear-gradient(135deg, #7c3aed, #4f46e5);
-          color: white; font-weight: 600; cursor: pointer;
-          display: flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif;
-        }
-        .pk-table-wrap {
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 24px; overflow: hidden; backdrop-filter: blur(18px);
-        }
-        .pk-table {
-          width: 100%; border-collapse: collapse;
-          table-layout: fixed;
-        }
-        .pk-table th {
-          text-align: left; padding: 18px 24px; font-size: 13px;
-          color: rgba(255,255,255,0.45); font-weight: 600;
-        }
-        .pk-table th.pk-sortable {
-          cursor: pointer; user-select: none;
-          transition: color 0.15s;
-        }
-        .pk-table th.pk-sortable:hover { color: rgba(255,255,255,0.7); }
-        .pk-table th.pk-sorted { color: #c4b5fd; }
-        .pk-col-name { width: 30%; }
-        .pk-col-price { width: 15%; }
-        .pk-col-credits { width: 15%; }
-        .pk-col-validity { width: 15%; }
-        .pk-col-status { width: 10%; }
-        .pk-table th.pk-col-status,
-        .pk-table td.pk-td-status {
-          text-align: center;
-        }
-        .pk-col-actions { width: 15%; }
-        .pk-table td {
-          padding: 18px 24px; border-top: 1px solid rgba(255,255,255,0.06);
-          color: rgba(255,255,255,0.88); font-size: 14px;
-          vertical-align: middle;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        .pk-table td.pk-td-actions {
-          overflow: visible;
-        }
-        .pk-name { font-weight: 600; color: #fff; }
-        .pk-description { font-size: 12px; color: rgba(255,255,255,0.38); margin-top: 2px; }
-        .pk-status-icon {
-          display: inline-flex; align-items: center; justify-content: center;
-          width: 34px; height: 34px; border-radius: 10px;
-          border: 1px solid transparent; cursor: pointer;
-          background: rgba(255,255,255,0.06);
-          transition: background 0.15s, color 0.15s;
-        }
-        .pk-status-icon.active {
-          color: #4ade80;
-          border-color: rgba(34,197,94,0.25);
-        }
-        .pk-status-icon.inactive {
-          color: #f87171;
-          border-color: rgba(239,68,68,0.25);
-        }
-        .pk-status-icon:hover { background: rgba(255,255,255,0.1); }
-        .pk-actions-cell {
-          display: flex; gap: 8px; align-items: center;
-          justify-content: flex-end;
-        }
-        .pk-icon-btn {
-          width: 34px; height: 34px; border-radius: 10px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.08);
-          color: rgba(255,255,255,0.7); cursor: pointer;
-          display: flex; align-items: center; justify-content: center;
-          transition: background 0.15s, color 0.15s;
-        }
-        .pk-icon-btn:hover {
-          background: rgba(255,255,255,0.12); color: #fff;
-        }
-        .pk-empty, .pk-error-cell, .pk-loading {
-          padding: 48px 24px; text-align: center;
-          color: rgba(255,255,255,0.45); font-size: 14px;
-        }
-        .pk-error-cell { color: #f87171; }
-        .pk-error-cell button { margin-top: 12px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .pk-footer {
-          display: flex; justify-content: space-between; align-items: center;
-          padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.06);
-        }
-        .pk-count { font-size: 13px; color: rgba(255,255,255,0.4); }
-        .pk-pagination { display: flex; gap: 8px; align-items: center; }
-        .pk-page-btn {
-          width: 36px; height: 36px; border-radius: 10px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.7); cursor: pointer;
-          display: flex; align-items: center; justify-content: center;
-        }
-        .pk-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-        .pk-page-btn:not(:disabled):hover { background: rgba(255,255,255,0.12); color: #fff; }
-        .pk-page-num { font-size: 13px; color: rgba(255,255,255,0.5); min-width: 80px; text-align: center; }
-        .pk-toast {
-          position: fixed; bottom: 28px; right: 28px; z-index: 200;
-          padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500;
-          backdrop-filter: blur(12px);
-          animation: pk-slide-in 0.25s ease;
-        }
-        .pk-toast.success {
-          background: rgba(34,197,94,0.2); border: 1px solid rgba(34,197,94,0.35);
-          color: #4ade80;
-        }
-        .pk-toast.error {
-          background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.35);
-          color: #f87171;
-        }
-        @keyframes pk-slide-in {
-          from { transform: translateY(12px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-      `}</style>
+      {/* Styles moved to PackageTable.css (apkg- prefix) */}
 
-      <div className="pk-wrap">
-        <div className="pk-head">
+      <div className="apkg-wrap">
+        <div className="apkg-head">
           <div>
-            <h2 className="pk-title">Package Management</h2>
-            <p className="pk-subtitle">
+            <h2 className="apkg-title">Package Management</h2>
+            <p className="apkg-subtitle">
               {total} package{total !== 1 ? "s" : ""} registered
             </p>
           </div>
 
-          <div className="pk-actions">
-            <div className="pk-search">
-              <Search size={18} className="pk-search-icon" />
+          <div className="apkg-actions">
+            <div className="apkg-search">
+              <Search size={18} className="apkg-search-icon" />
               <input
                 type="text"
                 placeholder="Search packages..."
@@ -336,7 +186,7 @@ export default function PackageTable({ onPackagesChange }) {
             </div>
 
             <select
-              className="pk-filter"
+              className="apkg-filter"
               value={statusFilter}
               onChange={(e) => {
                 setStatusFilter(e.target.value);
@@ -348,73 +198,66 @@ export default function PackageTable({ onPackagesChange }) {
               <option value="inactive">Inactive</option>
             </select>
 
-            <button type="button" className="pk-btn" onClick={openAddModal}>
+            <button type="button" className="apkg-btn" onClick={openAddModal}>
               <Plus size={18} />
               Create Package
             </button>
           </div>
         </div>
 
-        <div className="pk-table-wrap">
-          <table className="pk-table">
+        <div className="apkg-table-wrap">
+          <table className="apkg-table">
             <thead>
               <tr>
                 <th
-                  className={`pk-col-name pk-sortable${
-                    sortBy === "package_name" ? " pk-sorted" : ""
+                  className={`apkg-col-name apkg-sortable${
+                    sortBy === "package_name" ? " apkg-sorted" : ""
                   }`}
                   onClick={() => handleSort("package_name")}
                 >
                   Package Name
                 </th>
                 <th
-                  className={`pk-col-price pk-sortable${
-                    sortBy === "price" ? " pk-sorted" : ""
+                  className={`apkg-col-price apkg-sortable${
+                    sortBy === "price" ? " apkg-sorted" : ""
                   }`}
                   onClick={() => handleSort("price")}
                 >
                   Price
                 </th>
                 <th
-                  className={`pk-col-credits pk-sortable${
-                    sortBy === "credits" ? " pk-sorted" : ""
+                  className={`apkg-col-credits apkg-sortable${
+                    sortBy === "credits" ? " apkg-sorted" : ""
                   }`}
                   onClick={() => handleSort("credits")}
                 >
                   Credits
                 </th>
                 <th
-                  className={`pk-col-validity pk-sortable${
-                    sortBy === "validity_days" ? " pk-sorted" : ""
+                  className={`apkg-col-validity apkg-sortable${
+                    sortBy === "validity_days" ? " apkg-sorted" : ""
                   }`}
                   onClick={() => handleSort("validity_days")}
                 >
                   Validity
                 </th>
                 <th
-                  className={`pk-col-status pk-sortable${
-                    sortBy === "is_active" ? " pk-sorted" : ""
+                  className={`apkg-col-status apkg-sortable${
+                    sortBy === "is_active" ? " apkg-sorted" : ""
                   }`}
                   onClick={() => handleSort("is_active")}
                 >
                   Status
                 </th>
-                <th className="pk-col-actions">Actions</th>
+                <th className="apkg-col-actions">Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
                   <td colSpan={6}>
-                    <div className="pk-loading">
-                      <Loader2
-                        size={24}
-                        style={{
-                          animation: "spin 1s linear infinite",
-                          margin: "0 auto 8px",
-                          display: "block",
-                        }}
-                      />
+                    <div className="apkg-loading">
+                      <Loader2 size={24} className="apkg-loader-icon" />
                       Loading packages...
                     </div>
                   </td>
@@ -422,12 +265,12 @@ export default function PackageTable({ onPackagesChange }) {
               ) : error ? (
                 <tr>
                   <td colSpan={6}>
-                    <div className="pk-error-cell">
+                    <div className="apkg-error-cell">
                       {error}
                       <br />
                       <button
                         type="button"
-                        className="pk-retry"
+                        className="apkg-retry"
                         onClick={loadPackages}
                       >
                         <RotateCcw size={16} />
@@ -439,25 +282,25 @@ export default function PackageTable({ onPackagesChange }) {
               ) : packages.length === 0 ? (
                 <tr>
                   <td colSpan={6}>
-                    <div className="pk-empty">{emptyMessage}</div>
+                    <div className="apkg-empty">{emptyMessage}</div>
                   </td>
                 </tr>
               ) : (
                 packages.map((pkg) => (
                   <tr key={pkg.package_id}>
                     <td>
-                      <div className="pk-name">{pkg.package_name}</div>
+                      <div className="apkg-name">{pkg.package_name}</div>
                       {pkg.description && (
-                        <div className="pk-description">{pkg.description}</div>
+                        <div className="apkg-description">{pkg.description}</div>
                       )}
                     </td>
                     <td>₹{parseFloat(pkg.price).toLocaleString("en-IN")}</td>
                     <td>{pkg.credits} credits</td>
                     <td>{pkg.validity_days} days</td>
-                    <td className="pk-td-status">
+                    <td className="apkg-td-status">
                       <button
                         type="button"
-                        className={`pk-status-icon ${
+                        className={`apkg-status-icon ${
                           pkg.is_active ? "active" : "inactive"
                         }`}
                         title={
@@ -474,11 +317,11 @@ export default function PackageTable({ onPackagesChange }) {
                         )}
                       </button>
                     </td>
-                    <td className="pk-td-actions">
-                      <div className="pk-actions-cell">
+                    <td className="apkg-td-actions">
+                      <div className="apkg-actions-cell">
                         <button
                           type="button"
-                          className="pk-icon-btn"
+                          className="apkg-icon-btn"
                           title="Edit"
                           onClick={() => openEditModal(pkg)}
                         >
@@ -493,26 +336,26 @@ export default function PackageTable({ onPackagesChange }) {
           </table>
 
           {!loading && !error && packages.length > 0 && (
-            <div className="pk-footer">
-              <span className="pk-count">
+            <div className="apkg-footer">
+              <span className="apkg-count">
                 Showing {(page - 1) * PAGE_SIZE + 1}–
                 {Math.min(page * PAGE_SIZE, total)} of {total}
               </span>
-              <div className="pk-pagination">
+              <div className="apkg-pagination">
                 <button
                   type="button"
-                  className="pk-page-btn"
+                  className="apkg-page-btn"
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
                 >
                   <ChevronLeft size={18} />
                 </button>
-                <span className="pk-page-num">
+                <span className="apkg-page-num">
                   {page} / {totalPages}
                 </span>
                 <button
                   type="button"
-                  className="pk-page-btn"
+                  className="apkg-page-btn"
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => p + 1)}
                 >
@@ -563,7 +406,7 @@ export default function PackageTable({ onPackagesChange }) {
       />
 
       {toast && (
-        <div className={`pk-toast ${toast.type}`}>{toast.message}</div>
+        <div className={`apkg-toast ${toast.type}`}>{toast.message}</div>
       )}
     </>
   );
