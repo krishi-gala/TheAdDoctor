@@ -1,4 +1,6 @@
 import { Building2, Megaphone, IndianRupee, TrendingUp, Package } from "lucide-react";
+import "./Statscards.css";
+
 export default function StatsCards({ dashboardData }) {
 const stats = [
   {
@@ -75,94 +77,36 @@ const stats = [
 
 
   return (
-    <>
-      <style>{`
-        .sc-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-          gap: 20px;
-        }
+    <div className="sc-grid">
+      {stats.map((s) => {
+        const Icon = s.icon;
+        return (
+          <div className="sc-card" key={s.label}>
+            <div
+              className="sc-card-bar"
+              style={{ background: `linear-gradient(90deg, transparent, ${s.iconColor}, transparent)` }}
+            />
 
-        .sc-card {
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 20px;
-          padding: 24px 22px;
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          position: relative;
-          overflow: hidden;
-          transition: border-color 0.2s, background 0.2s;
-          cursor: default;
-        }
-        .sc-card:hover {
-          background: rgba(255,255,255,0.09);
-        }
-
-        .sc-card-bar {
-          position: absolute; top: 0; left: 20%; right: 20%; height: 2px;
-          border-radius: 0 0 999px 999px;
-        }
-
-        .sc-top {
-          display: flex; align-items: flex-start; justify-content: space-between;
-          margin-bottom: 18px;
-        }
-        .sc-icon {
-          width: 40px; height: 40px; border-radius: 12px;
-          display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0;
-        }
-        .sc-tag {
-          font-size: 10px; font-weight: 600; padding: 3px 9px;
-          border-radius: 20px; white-space: nowrap;
-        }
-
-        .sc-label {
-          font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 500;
-          margin-bottom: 6px;
-        }
-        .sc-value {
-          font-size: 30px; font-weight: 800; color: #fff; line-height: 1;
-          margin-bottom: 10px; letter-spacing: -0.5px;
-        }
-        .sc-change {
-          font-size: 11px; color: rgba(255,255,255,0.35);
-        }
-        .sc-change-pos { color: #5eead4; }
-      `}</style>
-
-      <div className="sc-grid">
-        {stats.map((s) => {
-          const Icon = s.icon;
-          return (
-            <div className="sc-card" key={s.label} style={{ "--hover-border": s.borderHover }}>
-              <div
-                className="sc-card-bar"
-                style={{ background: `linear-gradient(90deg, transparent, ${s.iconColor}, transparent)` }}
-              />
-
-              <div className="sc-top">
-                <div className="sc-icon" style={{ background: s.iconBg }}>
-                  <Icon size={18} style={{ color: s.iconColor }} />
-                </div>
-                <span
-                  className="sc-tag"
-                  style={{ background: s.tagBg, color: s.tagColor, border: `1px solid ${s.tagBorder}` }}
-                >
-                  {s.change.startsWith("+") || s.change.startsWith("↑") ? "↑" : "↓"} Live
-                </span>
+            <div className="sc-top">
+              <div className="sc-icon" style={{ background: s.iconBg }}>
+                <Icon size={18} style={{ color: s.iconColor }} />
               </div>
-
-              <div className="sc-label">{s.label}</div>
-              <div className="sc-value">{s.value}</div>
-              <div className={`sc-change${s.positive ? " sc-change-pos" : ""}`}>
-                {s.change}
-              </div>
+              <span
+                className="sc-tag"
+                style={{ background: s.tagBg, color: s.tagColor, border: `1px solid ${s.tagBorder}` }}
+              >
+                {s.change.startsWith("+") || s.change.startsWith("↑") ? "↑" : "↓"} Live
+              </span>
             </div>
-          );
-        })}
-      </div>
-    </>
+
+            <div className="sc-label">{s.label}</div>
+            <div className="sc-value">{s.value}</div>
+            <div className={`sc-change${s.positive ? " sc-change-pos" : ""}`}>
+              {s.change}
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
