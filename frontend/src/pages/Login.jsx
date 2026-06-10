@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import { useState } from "react";
 import { setAuthSession, getDefaultRoute } from "../services/auth";
+import "./Login.css";
 
 
 
@@ -155,7 +156,7 @@ export default function Login() {
           <div className="ad-card-bar" />
 
           <div className="ad-portal-tag">
-            <i className="ti ti-building" style={{ fontSize: 11 }} aria-hidden="true" />
+            <i className="ti ti-building ad-portal-tag--icon" aria-hidden="true" />
             Admin Panel
           </div>
 
@@ -190,13 +191,7 @@ export default function Login() {
             />
             {
               error && (
-                <div
-                  style={{
-                    color: "#f87171",
-                    fontSize: "13px",
-                    marginBottom: "14px",
-                  }}
-                >
+                <div className="ad-error-msg">
                   {error}
                 </div>
               )
@@ -223,7 +218,7 @@ export default function Login() {
             >
               <div className={`ad-chk${remember ? " ad-chk-on" : ""}`}>
                 {remember && (
-                  <i className="ti ti-check" style={{ fontSize: 10, color: "#fff" }} aria-hidden="true" />
+                  <i className="ti ti-check ad-chk-icon" aria-hidden="true" />
                 )}
               </div>
               Remember device
@@ -263,7 +258,7 @@ export default function Login() {
           </div>
 
           <button className="ad-btn-sso" type="button">
-            <i className="ti ti-building" style={{ fontSize: 15, color: "#a5b4fc" }} aria-hidden="true" />
+            <i className="ti ti-building ad-btn-sso-icon" aria-hidden="true" />
             Continue with Enterprise SSO
           </button>
 

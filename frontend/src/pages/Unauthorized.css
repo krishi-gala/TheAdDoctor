@@ -1,0 +1,62 @@
+/* Unauthorized page styles (prefix: unauth-) */
+
+.unauth-container {
+  min-height: 100vh;
+  background: #2d1f6e;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  padding: 24px;
+  text-align: center;
+}
+
+.unauth-code {
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 16px;
+  color: #f87171;
+}
+
+.unauth-title {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.unauth-message {
+  max-width: 420px;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 28px;
+}
+
+.unauth-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.unauth-btn-primary {
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}
+
+.unauth-btn-secondary {
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}

@@ -75,14 +75,7 @@ export default function BrandDetailsDrawer({ open, brandId, onClose }) {
         <div className="bd-body">
           {loading ? (
             <div className="bd-loading">
-              <Loader2
-                size={28}
-                style={{
-                  animation: "spin 1s linear infinite",
-                  margin: "0 auto 12px",
-                  display: "block",
-                }}
-              />
+              <Loader2 size={28} className="bd-loader-icon" />
               Loading details...
             </div>
           ) : error ? (

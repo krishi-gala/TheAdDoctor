@@ -1,0 +1,6 @@
+/* Login page additional styles - icon sizing (prefix: ad-) */
+
+.ad-portal-tag--icon { font-size: 11px; }
+.ad-chk-icon { font-size: 10px; color: #fff; }
+.ad-btn-sso-icon { font-size: 15px; color: #a5b4fc; }
+.ad-error-msg { color: #f87171; font-size: 13px; margin-bottom: 14px; }

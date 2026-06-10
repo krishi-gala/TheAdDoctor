@@ -130,6 +130,7 @@
 .bd-error {
   color: #f87171;
 }
+.bd-loader-icon { animation: spin 1s linear infinite; margin: 0 auto 12px; display: block; }
 @keyframes spin {
   to {
     transform: rotate(360deg);
