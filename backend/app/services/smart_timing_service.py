@@ -15,38 +15,45 @@ class SmartTimingService:
         business_type = brand.business_type
         if not business_type:
             # Fallback if brand has no business_type
-            return SmartTimingService._get_generic_fallback(format_slug)
+            return SmartTimingService._get_generic_fallback_list(format_slug)
 
-        # 2. Fallback to smart_timing table
-        recommendation = db.query(SmartTiming).filter(
+        # 2. Fetch ALL active timings for this business_type + format
+        recommendations = db.query(SmartTiming).filter(
             SmartTiming.business_type == business_type,
             SmartTiming.format_slug == format_slug,
             SmartTiming.is_active == True
-        ).first()
+        ).all()
 
-        if recommendation:
-            return {
-                "business_type": business_type,
-                "format_slug": format_slug,
-                "best_day": recommendation.best_day,
-                "prime_time": f"{recommendation.prime_time_start} - {recommendation.prime_time_end}",
-                "high_engagement_window": recommendation.high_engagement_window,
-                "source": "smart_timing"
-            }
+        if recommendations:
+            return [
+                {
+                    "recommendation_id": rec.recommendation_id,
+                    "business_type": business_type,
+                    "format_slug": format_slug,
+                    "best_day": rec.best_day,
+                    "prime_time": f"{rec.prime_time_start} - {rec.prime_time_end}",
+                    "high_engagement_window": rec.high_engagement_window,
+                    "source": "smart_timing"
+                }
+                for rec in recommendations
+            ]
 
-        # 4. Return generic fallback
-        return SmartTimingService._get_generic_fallback(format_slug, business_type)
+        # 3. Return generic fallback as a single-item list
+        return SmartTimingService._get_generic_fallback_list(format_slug, business_type)
 
     @staticmethod
-    def _get_generic_fallback(format_slug: str, business_type: str = "Generic"):
-        return {
-            "business_type": business_type,
-            "format_slug": format_slug,
-            "best_day": "Wednesday",
-            "prime_time": "12 PM - 3 PM",
-            "high_engagement_window": "Tuesday–Thursday Afternoon",
-            "source": "fallback"
-        }
+    def _get_generic_fallback_list(format_slug: str, business_type: str = "Generic"):
+        return [
+            {
+                "recommendation_id": None,
+                "business_type": business_type,
+                "format_slug": format_slug,
+                "best_day": "Wednesday",
+                "prime_time": "12 PM - 3 PM",
+                "high_engagement_window": "Tuesday–Thursday Afternoon",
+                "source": "fallback"
+            }
+        ]
 
     # --- Admin Methods ---
 

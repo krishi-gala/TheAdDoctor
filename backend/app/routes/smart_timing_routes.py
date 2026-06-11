@@ -17,13 +17,13 @@ from app.auth.permission_names import MANAGE_BOOKINGS
 
 router = APIRouter(prefix="/smart-timing", tags=["Smart Timing"])
 
-@router.get("/recommendations/{format_slug}", response_model=SmartTimingResponse)
+@router.get("/recommendations/{format_slug}", response_model=List[SmartTimingResponse])
 def get_recommendation(
     format_slug: str,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
-    # Only brands (or users in general) can fetch their timing recommendation
+    # Returns ALL active timings for the brand's business type + format
     return SmartTimingService.get_recommendation(db, current_user["user_id"], format_slug)
 
 # --- Admin Routes ---

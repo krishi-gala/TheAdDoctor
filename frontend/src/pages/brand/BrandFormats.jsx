@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Loader2, TrendingUp, Activity, Star, Calendar, Clock, ChevronLeft } from "lucide-react";
+import { Loader2, TrendingUp, Activity, Star, Calendar, Clock, ChevronLeft, CheckCircle2 } from "lucide-react";
 import { fetchBrandAdFormats } from "../../services/adFormats";
 import { fetchSmartTimingRecommendation } from "../../services/smartTiming";
 import "./BrandFormats.css";
@@ -10,7 +10,8 @@ export default function BrandFormats() {
 
   // Smart Timing State
   const [selectedFormat, setSelectedFormat] = useState(null);
-  const [timingData, setTimingData] = useState(null);
+  const [timingsList, setTimingsList] = useState([]);
+  const [selectedTiming, setSelectedTiming] = useState(null);
   const [timingLoading, setTimingLoading] = useState(false);
   const [timingMode, setTimingMode] = useState("recommended"); // 'recommended' | 'custom'
   const [customDate, setCustomDate] = useState("");
@@ -37,19 +38,26 @@ export default function BrandFormats() {
     setTimingLoading(true);
     setTimingError("");
     setTimingMode("recommended");
+    setSelectedTiming(null);
+    setTimingsList([]);
     
     try {
       const res = await fetchSmartTimingRecommendation(format.slug);
-      setTimingData(res.data);
+      const list = Array.isArray(res.data) ? res.data : [res.data];
+      setTimingsList(list);
+      if (list.length === 1) setSelectedTiming(list[0]);
     } catch (err) {
       console.error(err);
       setTimingError("Timing recommendations unavailable.");
-      // Fallback local data if API fails completely so it doesn't crash
-      setTimingData({
+      const fallback = [{
+        recommendation_id: null,
         best_day: "Wednesday",
         prime_time: "12 PM - 3 PM",
-        high_engagement_window: "Tuesday–Thursday Afternoon"
-      });
+        high_engagement_window: "Tuesday–Thursday Afternoon",
+        source: "fallback"
+      }];
+      setTimingsList(fallback);
+      setSelectedTiming(fallback[0]);
     } finally {
       setTimingLoading(false);
     }
@@ -57,7 +65,8 @@ export default function BrandFormats() {
 
   const handleBackToFormats = () => {
     setSelectedFormat(null);
-    setTimingData(null);
+    setTimingsList([]);
+    setSelectedTiming(null);
   };
 
   if (selectedFormat) {
@@ -96,25 +105,59 @@ export default function BrandFormats() {
             <>
               {timingError && <div className="bf-error">{timingError}</div>}
               
-              {timingMode === 'recommended' && timingData && (
+              {timingMode === 'recommended' && (
                 <>
-                  <div className="st-rec-grid">
-                    <div className="st-info-box">
-                      <div className="st-info-label">Best Day</div>
-                      <div className="st-info-val">{timingData.best_day}</div>
+                  {timingsList.length === 0 ? (
+                    <div className="bf-loader">
+                      <span>No timing recommendations available for your business type.</span>
                     </div>
-                    <div className="st-info-box">
-                      <div className="st-info-label">Prime Time</div>
-                      <div className="st-info-val">{timingData.prime_time}</div>
-                    </div>
-                    <div className="st-info-box full">
-                      <div className="st-info-label">High Engagement Window</div>
-                      <div className="st-info-val">{timingData.high_engagement_window}</div>
-                    </div>
-                  </div>
-                  <div className="st-action">
-                    <button className="st-submit">Confirm Selection</button>
-                  </div>
+                  ) : (
+                    <>
+                      {timingsList.length > 1 && (
+                        <p className="st-pick-label">
+                          {timingsList.length} timing options available — pick one:
+                        </p>
+                      )}
+                      <div className="st-timing-options">
+                        {timingsList.map((timing, idx) => {
+                          const isSelected = selectedTiming === timing;
+                          return (
+                            <div
+                              key={timing.recommendation_id ?? idx}
+                              className={`st-timing-option ${isSelected ? 'selected' : ''}`}
+                              onClick={() => setSelectedTiming(timing)}
+                            >
+                              <div className="st-timing-option-check">
+                                <CheckCircle2
+                                  size={20}
+                                  className={`st-check-icon ${isSelected ? 'visible' : ''}`}
+                                />
+                              </div>
+                              <div className="st-rec-grid">
+                                <div className="st-info-box">
+                                  <div className="st-info-label">Best Day</div>
+                                  <div className="st-info-val">{timing.best_day}</div>
+                                </div>
+                                <div className="st-info-box">
+                                  <div className="st-info-label">Prime Time</div>
+                                  <div className="st-info-val">{timing.prime_time}</div>
+                                </div>
+                                <div className="st-info-box full">
+                                  <div className="st-info-label">High Engagement Window</div>
+                                  <div className="st-info-val">{timing.high_engagement_window}</div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="st-action">
+                        <button className="st-submit" disabled={!selectedTiming}>
+                          Confirm Selection
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
 
@@ -156,7 +199,6 @@ export default function BrandFormats() {
 
   return (
     <>
-
       <div className="bf-header-block">
         <h1 className="bf-title">Ad Formats</h1>
         <p className="bf-subtitle">

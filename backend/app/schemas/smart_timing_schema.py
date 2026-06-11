@@ -3,6 +3,7 @@ from pydantic import BaseModel, field_validator
 from typing import Optional, Union
 
 class SmartTimingResponse(BaseModel):
+    recommendation_id: Optional[int] = None
     business_type: str
     format_slug: str
     best_day: str
