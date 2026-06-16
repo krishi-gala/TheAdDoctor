@@ -6,6 +6,7 @@ import {
   deleteBrand,
   updateBrandStatus,
   resetBrandPassword,
+  updateBrandCredits,
 } from "../services/brands";
 
 const PAGE_SIZE = 8;
@@ -54,6 +55,9 @@ export function useBrandTable({ onBrandsChange } = {}) {
   const [resetSaving, setResetSaving] = useState(false);
 
   const [menuBrandId, setMenuBrandId] = useState(null);
+
+  const [creditsTarget, setCreditsTarget] = useState(null);
+  const [creditsSaving, setCreditsSaving] = useState(false);
 
   // ─── Toast ────────────────────────────────────────────────────
   const [toast, setToast] = useState(null);
@@ -227,6 +231,23 @@ export function useBrandTable({ onBrandsChange } = {}) {
     }
   };
 
+  // ─── Update credits ───────────────────────────────────────────
+  const handleUpdateCredits = async (action, amount) => {
+    if (!creditsTarget) return;
+    setCreditsSaving(true);
+    try {
+      await updateBrandCredits(creditsTarget.user_id, action, amount);
+      showToast(`${amount} credits ${action}ed successfully`);
+      setCreditsTarget(null);
+      await loadBrands();
+      onBrandsChange?.();
+    } catch (err) {
+      showToast(getErrorMessage(err, "Failed to update credits"), "error");
+    } finally {
+      setCreditsSaving(false);
+    }
+  };
+
   // ─── Derived values ───────────────────────────────────────────
   const emptyMessage =
     search.trim() || statusFilter !== "all"
@@ -287,6 +308,12 @@ export function useBrandTable({ onBrandsChange } = {}) {
     resetSaving,
     setResetTarget,
     handleResetPassword,
+
+    // Credits
+    creditsTarget,
+    creditsSaving,
+    setCreditsTarget,
+    handleUpdateCredits,
 
     // Dropdown menu
     menuBrandId,

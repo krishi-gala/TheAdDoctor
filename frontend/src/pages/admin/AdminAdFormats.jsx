@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { Loader2, Edit2, Clock, X, Plus, Trash2 } from "lucide-react";
+import { Loader2, Edit2, Clock, X, Plus, Trash2, CalendarClock } from "lucide-react";
 import { fetchAdminAdFormats, updateAdFormat, updateAdFormatStatus } from "../../services/adFormats";
 import { 
   fetchAdminTimingsByBusiness,
   createAdminTiming, 
   updateAdminTiming, 
   toggleAdminTiming, 
-  deleteAdminTiming 
+  deleteAdminTiming,
+  fetchAdminTimings
 } from "../../services/smartTiming";
 import ConfirmModal from "../../components/admin/ConfirmModal";
 import "./AdminAdFormats.css";
@@ -53,6 +54,9 @@ export default function AdminAdFormats() {
   const [timings, setTimings] = useState([]);
   const [timingsLoading, setTimingsLoading] = useState(false);
   
+  const [timingDrawerOpen, setTimingDrawerOpen] = useState(false);
+  const [activeFormatForTiming, setActiveFormatForTiming] = useState(null);
+
   const [timingFormOpen, setTimingFormOpen] = useState(false);
   const [editingTiming, setEditingTiming] = useState(null);
   const [timingFormData, setTimingFormData] = useState({
@@ -80,10 +84,12 @@ export default function AdminAdFormats() {
     loadData();
   }, []);
 
-  const loadTimings = async (businessType) => {
+  const loadTimings = async (businessType, format) => {
+    if (!format) return;
     try {
       setTimingsLoading(true);
-      const res = await fetchAdminTimingsByBusiness(businessType);
+      // Fetch includeInactive=true for admin
+      const res = await fetchAdminTimings(format.slug, businessType, true);
       setTimings(res.data);
     } catch (err) {
       console.error(err);
@@ -93,8 +99,22 @@ export default function AdminAdFormats() {
   };
 
   useEffect(() => {
-    loadTimings(selectedBusinessType);
-  }, [selectedBusinessType]);
+    if (activeFormatForTiming) {
+      loadTimings(selectedBusinessType, activeFormatForTiming);
+    }
+  }, [selectedBusinessType, activeFormatForTiming]);
+
+  const handleManageTimingClick = (format) => {
+    setActiveFormatForTiming(format);
+    setSelectedBusinessType(BUSINESS_TYPES[0]);
+    setTimingDrawerOpen(true);
+  };
+
+  const handleCloseTimingDrawer = () => {
+    setTimingDrawerOpen(false);
+    setActiveFormatForTiming(null);
+    setTimings([]);
+  };
 
   const handleEditClick = (format) => {
     setCurrentFormat(format);
@@ -150,7 +170,7 @@ export default function AdminAdFormats() {
   const handleAddTiming = () => {
     setEditingTiming(null);
     setTimingFormData({
-      format_slug: formats.length > 0 ? formats[0].slug : "",
+      format_slug: activeFormatForTiming?.slug || "",
       best_day: "Wednesday",
       prime_time_start: "12 PM",
       prime_time_end: "3 PM",
@@ -182,7 +202,7 @@ export default function AdminAdFormats() {
         await createAdminTiming(timingFormData.format_slug, selectedBusinessType, timingFormData);
       }
       setTimingFormOpen(false);
-      loadTimings(selectedBusinessType);
+      loadTimings(selectedBusinessType, activeFormatForTiming);
     } catch (err) {
       console.error("Failed to save timing", err);
     }
@@ -191,7 +211,7 @@ export default function AdminAdFormats() {
   const handleToggleTimingStatus = async (timing) => {
     try {
       await toggleAdminTiming(timing.recommendation_id, !timing.is_active);
-      loadTimings(selectedBusinessType);
+      loadTimings(selectedBusinessType, activeFormatForTiming);
     } catch (err) {
       console.error("Failed to toggle timing", err);
     }
@@ -201,7 +221,7 @@ export default function AdminAdFormats() {
     if (window.confirm("Are you sure you want to delete this timing?")) {
       try {
         await deleteAdminTiming(timing.recommendation_id);
-        loadTimings(selectedBusinessType);
+        loadTimings(selectedBusinessType, activeFormatForTiming);
       } catch (err) {
         console.error("Failed to delete timing", err);
       }
@@ -258,8 +278,11 @@ export default function AdminAdFormats() {
                     </label>
                   </td>
                   <td className="aaf-td">
-                    <button className="aaf-btn-edit" onClick={() => handleEditClick(format)}>
+                    <button className="aaf-btn-edit" onClick={() => handleEditClick(format)} style={{ marginRight: '8px' }}>
                       <Edit2 size={14} /> Edit
+                    </button>
+                    <button className="aaf-btn-edit" onClick={() => handleManageTimingClick(format)}>
+                      <CalendarClock size={14} /> Manage Timings
                     </button>
                   </td>
                 </tr>
@@ -269,84 +292,7 @@ export default function AdminAdFormats() {
         </div>
       )}
 
-      {/* Smart Timing Recommendations Section */}
-      <div className="st-header">
-        <div>
-          <h2 className="aaf-title smaller">Smart Timing Recommendations</h2>
-          <p className="aaf-sub aaf-sub-no-margin">Configure optimal posting times for different business types</p>
-        </div>
-        <div className="st-header-flex-row">
-          <select 
-            className="st-business-select"
-            value={selectedBusinessType}
-            onChange={(e) => setSelectedBusinessType(e.target.value)}
-          >
-            {BUSINESS_TYPES.map(type => (
-              <option key={type} value={type}>{type}</option>
-            ))}
-          </select>
-          <button className="st-add-btn" onClick={handleAddTiming}>
-            <Plus size={16} /> Add Timing
-          </button>
-        </div>
-      </div>
 
-      <div className="aaf-table-container">
-        {timingsLoading ? (
-          <div className="aaf-loader">
-            <Loader2 size={36} className="aaf-loader-icon" />
-            <span>Loading timings...</span>
-          </div>
-        ) : timings.length === 0 ? (
-          <div className="aaf-loader">
-            <span>No timings configured for {selectedBusinessType}.</span>
-          </div>
-        ) : (
-          <table className="aaf-table">
-            <thead>
-              <tr>
-                <th className="aaf-th">Format</th>
-                <th className="aaf-th">Best Day</th>
-                <th className="aaf-th">Prime Time</th>
-                <th className="aaf-th">Engagement Window</th>
-                <th className="aaf-th">Status</th>
-                <th className="aaf-th">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {timings.map((timing) => (
-                <tr key={timing.recommendation_id} className="aaf-tr">
-                  <td className="aaf-td aaf-td-bold">{getFormatName(timing.format_slug)}</td>
-                  <td className="aaf-td">{timing.best_day}</td>
-                  <td className="aaf-td">{timing.prime_time_start} - {timing.prime_time_end}</td>
-                  <td className="aaf-td">{timing.high_engagement_window}</td>
-                  <td className="aaf-td">
-                    <span className={`st-chip ${timing.is_active ? 'active' : 'inactive'}`}>
-                      {timing.is_active ? 'Active' : 'Disabled'}
-                    </span>
-                  </td>
-                  <td className="aaf-td st-actions-cell">
-                    <label className="aaf-switch aaf-switch-scaled">
-                      <input 
-                        type="checkbox" 
-                        checked={timing.is_active}
-                        onChange={() => handleToggleTimingStatus(timing)}
-                      />
-                      <span className="aaf-slider"></span>
-                    </label>
-                    <button className="st-btn-action" onClick={() => handleEditTiming(timing)} title="Edit Timing">
-                      <Edit2 size={16} />
-                    </button>
-                    <button className="st-btn-action delete" onClick={() => handleDeleteTiming(timing)} title="Delete Timing">
-                      <Trash2 size={16} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
 
       {/* Format Edit Modal */}
       {editDialog && (
@@ -402,6 +348,86 @@ export default function AdminAdFormats() {
         </div>
       )}
 
+      {/* Smart Timing Drawer Modal */}
+      {timingDrawerOpen && activeFormatForTiming && (
+        <div className="aaf-modal-overlay">
+          <div className="aaf-modal aaf-modal-large">
+            <button className="aaf-modal-close" onClick={handleCloseTimingDrawer}><X size={20} /></button>
+            <h2 className="aaf-modal-title">Manage Smart Timings: {activeFormatForTiming.name}</h2>
+            
+            <div className="st-header-flex-row" style={{ marginBottom: '20px' }}>
+              <select 
+                className="st-business-select"
+                value={selectedBusinessType}
+                onChange={(e) => setSelectedBusinessType(e.target.value)}
+              >
+                {BUSINESS_TYPES.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+              <button className="st-add-btn" onClick={handleAddTiming}>
+                <Plus size={16} /> Add Timing
+              </button>
+            </div>
+
+            <div className="aaf-table-container">
+              {timingsLoading ? (
+                <div className="aaf-loader">
+                  <Loader2 size={36} className="aaf-loader-icon" />
+                  <span>Loading timings...</span>
+                </div>
+              ) : timings.length === 0 ? (
+                <div className="aaf-loader">
+                  <span>No timings configured for {selectedBusinessType} in {activeFormatForTiming.name}.</span>
+                </div>
+              ) : (
+                <table className="aaf-table">
+                  <thead>
+                    <tr>
+                      <th className="aaf-th">Best Day</th>
+                      <th className="aaf-th">Prime Time</th>
+                      <th className="aaf-th">Engagement Window</th>
+                      <th className="aaf-th">Status</th>
+                      <th className="aaf-th">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {timings.map((timing) => (
+                      <tr key={timing.recommendation_id} className="aaf-tr">
+                        <td className="aaf-td">{timing.best_day}</td>
+                        <td className="aaf-td">{timing.prime_time_start} - {timing.prime_time_end}</td>
+                        <td className="aaf-td">{timing.high_engagement_window}</td>
+                        <td className="aaf-td">
+                          <span className={`st-chip ${timing.is_active ? 'active' : 'inactive'}`}>
+                            {timing.is_active ? 'Active' : 'Disabled'}
+                          </span>
+                        </td>
+                        <td className="aaf-td st-actions-cell">
+                          <label className="aaf-switch aaf-switch-scaled">
+                            <input 
+                              type="checkbox" 
+                              checked={timing.is_active}
+                              onChange={() => handleToggleTimingStatus(timing)}
+                            />
+                            <span className="aaf-slider"></span>
+                          </label>
+                          <button className="st-btn-action" onClick={() => handleEditTiming(timing)} title="Edit Timing">
+                            <Edit2 size={16} />
+                          </button>
+                          <button className="st-btn-action delete" onClick={() => handleDeleteTiming(timing)} title="Delete Timing">
+                            <Trash2 size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Smart Timing Add/Edit Modal */}
       {timingFormOpen && (
         <div className="aaf-modal-overlay high-z">
@@ -410,18 +436,12 @@ export default function AdminAdFormats() {
             <form onSubmit={handleSaveTiming}>
               <div className="aaf-form-group">
                 <label className="aaf-form-label">Ad Format</label>
-                <select 
-                  className="aaf-form-select"
-                  value={timingFormData.format_slug}
-                  onChange={e => setTimingFormData({...timingFormData, format_slug: e.target.value})}
-                  required
-                  disabled={!!editingTiming} // Don't allow changing format when editing
-                >
-                  <option value="" disabled>Select a format</option>
-                  {formats.map(f => (
-                    <option key={f.format_id} value={f.slug}>{f.name}</option>
-                  ))}
-                </select>
+                <input 
+                  type="text" 
+                  className="aaf-form-input" 
+                  value={activeFormatForTiming?.name}
+                  disabled
+                />
               </div>
               <div className="aaf-form-group">
                 <label className="aaf-form-label">Best Day</label>

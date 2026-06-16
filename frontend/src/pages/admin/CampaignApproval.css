@@ -1,0 +1,354 @@
+.ca-page {
+  padding: 24px;
+}
+
+.ca-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.ca-title {
+  margin: 0;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.ca-subtitle {
+  margin: 4px 0 0 0;
+  color: #888;
+  font-size: 14px;
+}
+
+.ca-filters {
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ca-filter-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.ca-filter-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ca-filter-btn.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.ca-table-wrap {
+  background: rgba(20, 25, 40, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.ca-table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.ca-table th {
+  padding: 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #666;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.ca-table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #ccc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  vertical-align: middle;
+}
+
+.ca-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ca-fmt {
+  color: #fff;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.ca-biz {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.ca-view-btn {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.ca-view-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.ca-loader, .ca-error, .ca-empty {
+  padding: 40px;
+  text-align: center;
+  color: #888;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.ca-spinner {
+  animation: spin 1s linear infinite;
+  color: #3b82f6;
+}
+
+.ca-error { color: #ef4444; }
+
+.ca-retry {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Modal */
+.ca-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-width, 260px);
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+  transition: left 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+.ca-modal {
+  background: rgba(20, 25, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+.ca-modal-title {
+  margin: 0;
+  padding: 30px 30px 20px 30px;
+  color: #fff;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.ca-modal-body {
+  padding: 0 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.ca-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ca-detail label {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.ca-detail span {
+  display: block;
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.ca-notes-section {
+  margin-bottom: 20px;
+}
+
+.ca-notes-section label {
+  display: block;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.ca-brand-notes {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 8px;
+  color: #ddd;
+  font-size: 14px;
+  min-height: 60px;
+}
+
+.ca-admin-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.ca-admin-input:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.ca-admin-textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.ca-admin-textarea:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.ca-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 24px 30px 30px 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.ca-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.ca-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ca-btn-cancel {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.ca-btn-cancel:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ca-btn-reject {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.ca-btn-reject:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.ca-btn-approve {
+  background: #10b981;
+  border: none;
+  color: #fff;
+}
+
+.ca-btn-approve:hover:not(:disabled) {
+  background: #059669;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ca-modal {
+    max-height: 95vh;
+  }
+  .ca-modal-title {
+    padding: 20px 20px 16px 20px;
+  }
+  .ca-modal-body {
+    padding: 0 20px;
+  }
+  .ca-actions {
+    padding: 16px 20px 20px 20px;
+  }
+  .ca-details-grid {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  .ca-modal-overlay {
+    left: 0 !important;
+  }
+}

@@ -1,12 +1,20 @@
 .cm-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  /* Offset by sidebar width so dialogs center within the content area */
+  left: var(--sidebar-width, 260px);
+  right: 0;
+  bottom: 0;
   z-index: 110;
   background: rgba(15, 10, 40, 0.65);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Animate in sync with sidebar */
+  transition: left 0.28s cubic-bezier(0.4,0,0.2,1);
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 .cm-box {

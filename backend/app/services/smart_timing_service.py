@@ -58,17 +58,21 @@ class SmartTimingService:
     # --- Admin Methods ---
 
     @staticmethod
-    def get_timings_by_business(db: Session, business_type: str):
-        return db.query(SmartTiming).filter(
-            SmartTiming.business_type == business_type
-        ).all()
+    def get_timings_by_business(db: Session, business_type: str, include_inactive: bool = False):
+        query = db.query(SmartTiming).filter(SmartTiming.business_type == business_type)
+        if not include_inactive:
+            query = query.filter(SmartTiming.is_active == True)
+        return query.all()
 
     @staticmethod
-    def get_timings_by_business_and_format(db: Session, format_slug: str, business_type: str):
-        return db.query(SmartTiming).filter(
+    def get_timings_by_business_and_format(db: Session, format_slug: str, business_type: str, include_inactive: bool = False):
+        query = db.query(SmartTiming).filter(
             SmartTiming.business_type == business_type,
             SmartTiming.format_slug == format_slug
-        ).all()
+        )
+        if not include_inactive:
+            query = query.filter(SmartTiming.is_active == True)
+        return query.all()
 
     @staticmethod
     def create_timing(db: Session, format_slug: str, business_type: str, data: SmartTimingAdminCreate):
@@ -117,6 +121,6 @@ class SmartTimingService:
         if not timing:
             raise HTTPException(status_code=404, detail="Timing not found")
             
-        db.delete(timing)
+        timing.is_active = False
         db.commit()
         return {"detail": "Timing deleted"}

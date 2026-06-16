@@ -68,6 +68,11 @@ def get_package_name(user: User) -> str:
     return "No Package"
 
 def serialize_brand_list(user: User) -> dict:
+    wallet = user.wallet
+    remaining_credits = 0
+    if wallet:
+        remaining_credits = wallet.total_credits - (wallet.used_credits or 0)
+
     return {
         "user_id": user.user_id,
         "company_name": user.company_name,
@@ -76,6 +81,7 @@ def serialize_brand_list(user: User) -> dict:
         "business_type": user.business_type,
         "package": get_package_name(user),
         "is_active": user.is_active,
+        "remaining_credits": remaining_credits,
         "created_at": (
             user.created_at.isoformat()
             if user.created_at

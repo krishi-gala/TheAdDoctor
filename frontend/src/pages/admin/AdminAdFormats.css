@@ -68,18 +68,42 @@ input:checked + .aaf-slider:before { transform: translateX(16px); }
 
 /* Modal */
 .aaf-modal-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-  display: flex; align-items: center; justify-content: center; z-index: 100;
+  position: fixed;
+  top: 0;
+  /* Offset by sidebar width so the overlay only covers the content area */
+  left: var(--sidebar-width, 260px);
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  /* Animate in sync with the sidebar transition */
+  transition: left 0.28s cubic-bezier(0.4,0,0.2,1);
+  padding: 16px;
+  box-sizing: border-box;
 }
 .aaf-modal-overlay.high-z, .high-z { z-index: 110; }
 
 .aaf-modal {
   background: #1e1b4b; border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 20px; width: 400px; max-width: 90%; padding: 24px;
-  max-height: 90vh; overflow-y: auto;
+  border-radius: 20px; width: 400px; max-width: 100%; padding: 24px;
+  max-height: 90vh; overflow-y: auto; position: relative;
+  box-sizing: border-box;
 }
-.aaf-modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: white; }
+/* Large modal: fills available content width up to 860px */
+.aaf-modal-large { width: 860px; max-width: 100%; }
+
+.aaf-modal-close {
+  position: absolute; top: 20px; right: 20px; background: transparent; border: none;
+  color: rgba(255,255,255,0.5); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: color 0.2s;
+}
+.aaf-modal-close:hover { color: #fff; }
+
+.aaf-modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: white; padding-right: 30px; }
 
 .aaf-form-group { margin-bottom: 16px; }
 .aaf-form-group-flex { display: flex; gap: 12px; }

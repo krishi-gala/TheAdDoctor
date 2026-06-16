@@ -1,3 +1,4 @@
+/* ─── Root ─────────────────────────────────────────────── */
 .sb-root {
   width: 260px;
   min-width: 260px;
@@ -9,22 +10,72 @@
   border-right: 1px solid rgba(255,255,255,0.1);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  padding: 28px 20px;
+  padding: 28px 16px;
   display: flex;
   flex-direction: column;
   position: relative;
   z-index: 3;
+  transition: width 0.28s cubic-bezier(0.4,0,0.2,1),
+              min-width 0.28s cubic-bezier(0.4,0,0.2,1),
+              max-width 0.28s cubic-bezier(0.4,0,0.2,1),
+              flex-basis 0.28s cubic-bezier(0.4,0,0.2,1),
+              padding 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+.sb-root.sb-collapsed {
+  width: 68px;
+  min-width: 68px;
+  max-width: 68px;
+  flex: 0 0 68px;
+  padding: 28px 10px;
 }
 
 .sb-root, .sb-root * {
   box-sizing: border-box;
 }
 
+/* ─── Toggle Arrow ──────────────────────────────────────── */
+.sb-toggle {
+  position: absolute;
+  top: 22px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #7c3aed;
+  border: 2px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 12px rgba(124,58,237,0.5);
+  transition: background 0.2s, transform 0.2s;
+  padding: 0;
+}
+
+.sb-toggle:hover {
+  background: #6d28d9;
+}
+
+.sb-toggle-icon {
+  color: #fff;
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  flex-shrink: 0;
+}
+
+.sb-collapsed .sb-toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* ─── Logo ──────────────────────────────────────────────── */
 .sb-logo-row {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 36px;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .sb-logo-mark {
@@ -42,6 +93,19 @@
   box-shadow: 0 4px 14px rgba(124,58,237,0.4);
 }
 
+.sb-logo-text {
+  overflow: hidden;
+  min-width: 0;
+  transition: opacity 0.2s, width 0.28s;
+  white-space: nowrap;
+}
+
+.sb-collapsed .sb-logo-text {
+  opacity: 0;
+  width: 0;
+  pointer-events: none;
+}
+
 .sb-logo-name {
   font-size: 15px;
   font-weight: 700;
@@ -54,17 +118,27 @@
   margin-top: 1px;
 }
 
+/* ─── Section label ─────────────────────────────────────── */
 .sb-section-label {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.25);
-  padding: 0 12px;
+  padding: 0 10px;
   margin-bottom: 8px;
   margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s;
 }
 
+.sb-collapsed .sb-section-label {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ─── Menu ──────────────────────────────────────────────── */
 .sb-menu {
   display: flex;
   flex-direction: column;
@@ -76,7 +150,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 14px;
+  padding: 11px 10px;
   border-radius: 12px;
   background: none;
   border: none;
@@ -89,6 +163,8 @@
   transition: background 0.15s, color 0.15s;
   text-align: left;
   text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .sb-item:hover {
@@ -110,17 +186,56 @@
   flex-shrink: 0;
 }
 
+.sb-item-label {
+  flex-grow: 1;
+  transition: opacity 0.18s;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sb-collapsed .sb-item-label {
+  opacity: 0;
+  width: 0;
+  flex-grow: 0;
+}
+
+/* ─── Badge ─────────────────────────────────────────────── */
+.sb-pending-badge {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1;
+  display: inline-block;
+  margin-left: auto;
+  transition: opacity 0.18s;
+}
+
+.sb-collapsed .sb-pending-badge {
+  opacity: 0;
+  width: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+/* ─── Divider ───────────────────────────────────────────── */
 .sb-divider {
   height: 1px;
   background: rgba(255,255,255,0.07);
   margin: 16px 0;
 }
 
+/* ─── Logout ────────────────────────────────────────────── */
 .sb-logout {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 14px;
+  padding: 11px 10px;
   border-radius: 12px;
   background: rgba(239,68,68,0.08);
   border: 1px solid rgba(239,68,68,0.18);
@@ -131,6 +246,8 @@
   font-weight: 500;
   width: 100%;
   transition: background 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .sb-logout:hover {

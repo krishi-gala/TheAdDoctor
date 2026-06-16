@@ -31,19 +31,21 @@ def get_recommendation(
 @router.get("/admin/business/{business_type}", response_model=List[SmartTimingAdminResponse])
 def get_admin_timings_by_business(
     business_type: str,
+    include_inactive: bool = False,
     db: Session = Depends(get_db),
     current_user: dict = Depends(permission_required(MANAGE_BOOKINGS))
 ):
-    return SmartTimingService.get_timings_by_business(db, business_type)
+    return SmartTimingService.get_timings_by_business(db, business_type, include_inactive)
 
 @router.get("/admin/{format_slug}/{business_type}", response_model=List[SmartTimingAdminResponse])
 def get_admin_timings(
     format_slug: str,
     business_type: str,
+    include_inactive: bool = False,
     db: Session = Depends(get_db),
     current_user: dict = Depends(permission_required(MANAGE_BOOKINGS))
 ):
-    return SmartTimingService.get_timings_by_business_and_format(db, format_slug, business_type)
+    return SmartTimingService.get_timings_by_business_and_format(db, format_slug, business_type, include_inactive)
 
 @router.post("/admin/{format_slug}/{business_type}", response_model=SmartTimingAdminResponse)
 def create_admin_timing(

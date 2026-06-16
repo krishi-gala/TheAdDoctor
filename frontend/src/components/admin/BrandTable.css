@@ -38,9 +38,9 @@
 .bt-table-wrap {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 24px; overflow: hidden; backdrop-filter: blur(18px);
+  border-radius: 24px; overflow-x: auto; overflow-y: hidden; backdrop-filter: blur(18px);
 }
-.bt-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.bt-table { width: 100%; min-width: 800px; border-collapse: collapse; table-layout: fixed; }
 .bt-table th {
   text-align: left; padding: 18px 24px; font-size: 13px;
   color: rgba(255,255,255,0.45); font-weight: 600;
@@ -48,14 +48,15 @@
 .bt-table th.bt-sortable { cursor: pointer; user-select: none; transition: color 0.15s; }
 .bt-table th.bt-sortable:hover { color: rgba(255,255,255,0.7); }
 .bt-table th.bt-sorted { color: #c4b5fd; }
-.bt-col-company { width: 28%; }
-.bt-col-contact { width: 32%; }
+.bt-col-company { width: 22%; }
+.bt-col-contact { width: 28%; }
 .bt-col-package { width: 14%; }
+.bt-col-credits { width: 12%; }
 .bt-col-status { width: 8%; }
 .bt-table th.bt-col-status, .bt-table td.bt-td-status {
   text-align: center; padding-left: 12px; padding-right: 12px;
 }
-.bt-col-actions { width: 18%; }
+.bt-col-actions { width: 16%; }
 .bt-table td {
   padding: 18px 24px; border-top: 1px solid rgba(255,255,255,0.06);
   color: rgba(255,255,255,0.88); font-size: 14px;

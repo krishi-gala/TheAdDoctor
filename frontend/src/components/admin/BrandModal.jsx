@@ -154,7 +154,8 @@ export default function BrandModal({ open, mode, brand, onClose, onSave, saving 
           </div>
 
           <form className="bm-form" onSubmit={handleSubmit}>
-            <div className="bm-field">
+            <div className="bm-modal-body">
+              <div className="bm-field">
               <label className="bm-label">Company name</label>
               <input
                 className="bm-input"
@@ -256,6 +257,8 @@ export default function BrandModal({ open, mode, brand, onClose, onSave, saving 
               >
                 <span className="bm-toggle-knob" />
               </button>
+            </div>
+
             </div>
 
             <div className="bm-actions">

@@ -101,7 +101,8 @@ export default function PackageModal({ open, mode, packageData, onClose, onSave,
           </div>
 
           <form className="pkg-form" onSubmit={handleSubmit}>
-            <div className="pkg-field">
+            <div className="pkg-modal-body">
+              <div className="pkg-field">
               <label className="pkg-label">Package Name</label>
               <input
                 className="pkg-input"
@@ -180,6 +181,8 @@ export default function PackageModal({ open, mode, packageData, onClose, onSave,
                 onChange={(e) => handleChange("description", e.target.value)}
                 placeholder="Include features or benefits for this pricing tier..."
               />
+            </div>
+
             </div>
 
             <div className="pkg-actions">

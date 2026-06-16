@@ -37,13 +37,18 @@
   display: flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif;
 }
 .apkg-table-wrap {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 24px; overflow: hidden; backdrop-filter: blur(18px);
+  background: rgba(20, 25, 40, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
+
 .apkg-table {
-  width: 100%; border-collapse: collapse;
-  table-layout: fixed;
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+  text-align: left;
 }
 .apkg-table th {
   text-align: left; padding: 18px 24px; font-size: 13px;

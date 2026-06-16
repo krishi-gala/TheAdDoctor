@@ -86,3 +86,27 @@ def apply_purchase_to_wallet(
 
 def calculate_expiry(validity_days: int) -> datetime:
     return datetime.utcnow() + timedelta(days=validity_days)
+
+def deduct_credits(db: Session, brand_id: int, credits_to_deduct: int) -> bool:
+    wallet = get_wallet_by_brand(db, brand_id)
+    if not wallet or is_wallet_expired(wallet):
+        return False
+        
+    remaining = wallet.total_credits - (wallet.used_credits or 0)
+    if remaining < credits_to_deduct:
+        return False
+        
+    wallet.used_credits = (wallet.used_credits or 0) + credits_to_deduct
+    wallet.updated_at = datetime.utcnow()
+    db.commit()
+    return True
+
+def restore_credits(db: Session, brand_id: int, credits_to_restore: int) -> bool:
+    wallet = get_wallet_by_brand(db, brand_id)
+    if not wallet:
+        return False
+    wallet.used_credits = max(0, (wallet.used_credits or 0) - credits_to_restore)
+    wallet.updated_at = datetime.utcnow()
+    return True
+
+

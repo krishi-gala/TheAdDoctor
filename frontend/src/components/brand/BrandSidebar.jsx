@@ -1,4 +1,5 @@
-import { LogOut, LayoutDashboard, ShoppingBag, History } from "lucide-react";
+import { useState } from "react";
+import { LogOut, ChevronLeft, LayoutDashboard, ShoppingBag, History, Megaphone } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { logout, hasPermission } from "../../services/auth";
 import { PERMISSIONS } from "../../constants/permissions";
@@ -10,7 +11,7 @@ const BRAND_MENU_ITEMS = [
     label: "Dashboard",
     path: "/brand/dashboard",
     icon: LayoutDashboard,
-    permission: null, // Always show to brands
+    permission: null,
   },
   {
     id: "buy-package",
@@ -20,23 +21,24 @@ const BRAND_MENU_ITEMS = [
     permission: PERMISSIONS.PURCHASE_PACKAGE,
   },
   {
+    id: "ad-formats",
+    label: "Ad Formats",
+    path: "/brand/ad-formats",
+    icon: Megaphone,
+    permission: PERMISSIONS.PURCHASE_PACKAGE,
+  },
+  {
     id: "transactions",
     label: "Purchase History",
     path: "/brand/transactions",
     icon: History,
     permission: PERMISSIONS.PURCHASE_PACKAGE,
   },
-  {
-    id: "ad-formats",
-    label: "Ad Formats",
-    path: "/brand/ad-formats",
-    icon: ShoppingBag,
-    permission: PERMISSIONS.PURCHASE_PACKAGE,
-  },
 ];
 
 export default function BrandSidebar() {
   const navigate = useNavigate();
+  const [collapsed, setCollapsed] = useState(false);
 
   const visibleMenuItems = BRAND_MENU_ITEMS.filter((item) =>
     !item.permission || hasPermission(item.permission)
@@ -47,10 +49,20 @@ export default function BrandSidebar() {
   };
 
   return (
-    <aside className="bsb-root">
+    <aside className={`bsb-root${collapsed ? " bsb-collapsed" : ""}`}>
+
+      {/* Toggle arrow */}
+      <button
+        className="bsb-toggle"
+        onClick={() => setCollapsed(c => !c)}
+        title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+      >
+        <ChevronLeft size={16} className="bsb-toggle-icon" />
+      </button>
+
       <div className="bsb-logo-row">
         <div className="bsb-logo-mark">Dr</div>
-        <div>
+        <div className="bsb-logo-text">
           <div className="bsb-logo-name">The Ad Doctor</div>
           <div className="bsb-logo-sub">Brand Portal</div>
         </div>
@@ -68,9 +80,10 @@ export default function BrandSidebar() {
               className={({ isActive }) =>
                 `bsb-item${isActive ? " active" : ""}`
               }
+              title={collapsed ? item.label : undefined}
             >
               <Icon size={18} className="bsb-item-icon" />
-              {item.label}
+              <span className="bsb-item-label">{item.label}</span>
             </NavLink>
           );
         })}
@@ -78,9 +91,14 @@ export default function BrandSidebar() {
 
       <div className="bsb-divider" />
 
-      <button type="button" className="bsb-logout" onClick={handleLogout}>
+      <button
+        type="button"
+        className="bsb-logout"
+        onClick={handleLogout}
+        title={collapsed ? "Logout" : undefined}
+      >
         <LogOut size={18} />
-        Logout
+        <span className="bsb-item-label">Logout</span>
       </button>
     </aside>
   );

@@ -8,8 +8,7 @@ from app.routes.package_routes import router as package_router
 from app.routes.brand_package_routes import (
     router as brand_package_router
 )
-from app.routes.ad_format_routes import router as ad_format_router
-from app.routes.smart_timing_routes import router as smart_timing_router
+from app.routes import ad_format_routes, smart_timing_routes, campaign_booking_routes
 
 app = FastAPI()
 
@@ -31,8 +30,9 @@ app.include_router(admin_router)
 app.include_router(brand_router)
 app.include_router(package_router)
 app.include_router(brand_package_router)
-app.include_router(ad_format_router)
-app.include_router(smart_timing_router)
+app.include_router(ad_format_routes.router)
+app.include_router(smart_timing_routes.router)
+app.include_router(campaign_booking_routes.router)
 
 
 @app.get("/")

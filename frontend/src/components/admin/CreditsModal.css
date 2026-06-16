@@ -1,0 +1,199 @@
+.cr-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: crFadeIn 0.2s ease-out;
+}
+
+.cr-modal {
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  animation: crSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cr-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.cr-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.cr-sub {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.cr-close {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cr-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.cr-current-box {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cr-current-label {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.cr-current-val {
+    color: #60a5fa;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.cr-field {
+  margin-bottom: 20px;
+}
+
+.cr-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #d1d5db;
+  margin-bottom: 8px;
+}
+
+.cr-radio-group {
+    display: flex;
+    gap: 16px;
+}
+
+.cr-radio {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.cr-input {
+  width: 100%;
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.cr-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.cr-preview {
+    font-size: 14px;
+    color: #d1d5db;
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.cr-error {
+  color: #ef4444;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.cr-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cr-cancel {
+  background: none;
+  border: 1px solid #374151;
+  color: #d1d5db;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cr-cancel:hover {
+  background: #1f2937;
+  color: #fff;
+}
+
+.cr-save {
+  background: #3b82f6;
+  border: 1px solid #3b82f6;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cr-save:hover:not(:disabled) {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.cr-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@keyframes crFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes crSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

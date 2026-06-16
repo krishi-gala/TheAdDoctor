@@ -17,6 +17,7 @@ import {
 import BrandModal from "./BrandModal";
 import BrandDetailsDrawer from "./BrandDetailsDrawer";
 import ResetPasswordModal from "./ResetPasswordModal";
+import CreditsModal from "./CreditsModal";
 import ConfirmModal from "./ConfirmModal";
 import { useBrandTable } from "../../hooks/useBrandTable";
 import "./BrandTable.css";
@@ -41,6 +42,7 @@ function TableHeader({ sortBy, sortDir, onSort }) {
         {col("company_name", "Company",  "bt-col-company")}
         {col("email",        "Contact",  "bt-col-contact")}
         {col("package",      "Package",  "bt-col-package")}
+        {col("remaining_credits", "Credits Left", "bt-col-credits")}
         {col("is_active",    "Status",   "bt-col-status")}
         <th className="bt-col-actions">Actions</th>
       </tr>
@@ -48,7 +50,7 @@ function TableHeader({ sortBy, sortDir, onSort }) {
   );
 }
 
-function BrandRow({ brand, onEdit, onDelete, onStatusClick, onView, onResetPassword, menuBrandId, setMenuBrandId }) {
+function BrandRow({ brand, onEdit, onDelete, onStatusClick, onView, onResetPassword, onEditCredits, menuBrandId, setMenuBrandId }) {
   const isMenuOpen = menuBrandId === brand.user_id;
 
   const toggleMenu = () =>
@@ -71,6 +73,21 @@ function BrandRow({ brand, onEdit, onDelete, onStatusClick, onView, onResetPassw
       </td>
 
       <td>{brand.package || "—"}</td>
+
+      <td>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>{brand.remaining_credits || 0} Credits</span>
+            <button 
+                type="button" 
+                className="bt-icon-btn" 
+                style={{ padding: '4px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af' }}
+                title="Edit Credits" 
+                onClick={() => onEditCredits(brand)}
+            >
+                <Pencil size={14} />
+            </button>
+        </div>
+      </td>
 
       <td className="bt-td-status">
         <button
@@ -128,7 +145,7 @@ function TableBody({ brands, loading, error, emptyMessage, onRetry, ...rowProps 
     return (
       <tbody>
         <tr>
-          <td colSpan={5}>
+          <td colSpan={6}>
             <div className="bt-loading">
               <Loader2 size={24} className="bt-loader-icon" />
               Loading brands...
@@ -143,7 +160,7 @@ function TableBody({ brands, loading, error, emptyMessage, onRetry, ...rowProps 
     return (
       <tbody>
         <tr>
-          <td colSpan={5}>
+          <td colSpan={6}>
             <div className="bt-error-cell">
               {error}
               <br />
@@ -161,7 +178,7 @@ function TableBody({ brands, loading, error, emptyMessage, onRetry, ...rowProps 
     return (
       <tbody>
         <tr>
-          <td colSpan={5}>
+          <td colSpan={6}>
             <div className="bt-empty">{emptyMessage}</div>
           </td>
         </tr>
@@ -217,6 +234,8 @@ export default function BrandTable({ onBrandsChange }) {
     viewBrandId, setViewBrandId,
     // Reset password
     resetTarget, resetSaving, setResetTarget, handleResetPassword,
+    // Credits
+    creditsTarget, creditsSaving, setCreditsTarget, handleUpdateCredits,
     // Menu
     menuBrandId, setMenuBrandId,
     // Toast
@@ -279,6 +298,7 @@ export default function BrandTable({ onBrandsChange }) {
               onStatusClick={setStatusTarget}
               onView={setViewBrandId}
               onResetPassword={setResetTarget}
+              onEditCredits={setCreditsTarget}
               menuBrandId={menuBrandId}
               setMenuBrandId={setMenuBrandId}
             />
@@ -319,6 +339,14 @@ export default function BrandTable({ onBrandsChange }) {
         onClose={() => setResetTarget(null)}
         onSave={handleResetPassword}
         saving={resetSaving}
+      />
+
+      <CreditsModal
+        open={!!creditsTarget}
+        brand={creditsTarget}
+        onClose={() => setCreditsTarget(null)}
+        onSave={handleUpdateCredits}
+        saving={creditsSaving}
       />
 
       <ConfirmModal

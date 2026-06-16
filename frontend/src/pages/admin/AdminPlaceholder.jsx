@@ -1,9 +1,15 @@
 import { useLocation } from "react-router-dom";
 import { ADMIN_MENU_ITEMS } from "../../config/adminMenu";
+import CampaignApproval from "./CampaignApproval";
 import "./AdminPlaceholder.css";
 
 export default function AdminPlaceholder() {
   const { pathname } = useLocation();
+  
+  if (pathname === '/admin/campaigns') {
+    return <CampaignApproval />;
+  }
+
   const item = ADMIN_MENU_ITEMS.find((m) => m.path === pathname);
    
   return (

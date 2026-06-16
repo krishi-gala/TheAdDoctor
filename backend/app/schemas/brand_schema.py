@@ -1,5 +1,5 @@
 import re
-from typing import Optional
+from typing import Optional, Literal
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
@@ -49,3 +49,7 @@ class BrandUpdate(BaseModel):
 
 class BrandStatusPatch(BaseModel):
     is_active: bool
+
+class BrandCreditsUpdate(BaseModel):
+    action: Literal["add", "deduct"]
+    amount: int = Field(..., gt=0)

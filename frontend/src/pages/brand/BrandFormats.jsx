@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import { Loader2, TrendingUp, Activity, Star, Calendar, Clock, ChevronLeft, CheckCircle2 } from "lucide-react";
 import { fetchBrandAdFormats } from "../../services/adFormats";
 import { fetchSmartTimingRecommendation } from "../../services/smartTiming";
+import BookingConfirmationModal from "../../components/brand/BookingConfirmationModal";
 import "./BrandFormats.css";
 
 export default function BrandFormats() {
+  const { reloadWallet } = useOutletContext() || {};
   const [formats, setFormats] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,6 +20,8 @@ export default function BrandFormats() {
   const [customDate, setCustomDate] = useState("");
   const [customTime, setCustomTime] = useState("");
   const [timingError, setTimingError] = useState("");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const loadFormats = async () => {
@@ -152,7 +157,7 @@ export default function BrandFormats() {
                         })}
                       </div>
                       <div className="st-action">
-                        <button className="st-submit" disabled={!selectedTiming}>
+                        <button className="st-submit" disabled={!selectedTiming} onClick={() => setIsModalOpen(true)}>
                           Confirm Selection
                         </button>
                       </div>
@@ -184,7 +189,7 @@ export default function BrandFormats() {
                     </div>
                   </div>
                   <div className="st-action">
-                    <button className="st-submit" disabled={!customDate || !customTime}>
+                    <button className="st-submit" disabled={!customDate || !customTime} onClick={() => setIsModalOpen(true)}>
                       Confirm Selection
                     </button>
                   </div>
@@ -193,6 +198,34 @@ export default function BrandFormats() {
             </>
           )}
         </div>
+
+        <BookingConfirmationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSuccess={() => {
+            setIsModalOpen(false);
+            handleBackToFormats();
+            setCustomDate("");
+            setCustomTime("");
+            setTimingMode("recommended");
+            if (reloadWallet) {
+              reloadWallet();
+            }
+            // Automatically refresh formats to get updated inventory
+            const loadFormats = async () => {
+              try {
+                const res = await fetchBrandAdFormats();
+                setFormats(res.data);
+              } catch (err) {}
+            };
+            loadFormats();
+          }}
+          format={selectedFormat}
+          timing={selectedTiming}
+          timingMode={timingMode}
+          customDate={customDate}
+          customTime={customTime}
+        />
       </>
     );
   }

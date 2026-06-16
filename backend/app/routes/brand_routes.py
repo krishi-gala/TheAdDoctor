@@ -14,7 +14,7 @@ from app.auth.permissions import permission_required
 from app.core.database import SessionLocal , get_db
 from app.core.password import hash_password
 from app.models.user import User
-from app.schemas.brand_schema import BrandCreate, BrandStatusPatch, BrandUpdate
+from app.schemas.brand_schema import BrandCreate, BrandStatusPatch, BrandUpdate, BrandCreditsUpdate
 from app.services.audit_service import create_audit_log
 from app.services.brand_service import (
     apply_search,
@@ -317,4 +317,55 @@ def update_brand_status(
         raise HTTPException(
             status_code=500,
             detail=f"Could not update brand status: {str(e)}"
+        )
+
+@router.patch("/brands/{brand_id}/credits")
+def update_brand_credits(
+    brand_id: int,
+    payload: BrandCreditsUpdate,
+    current_user: dict = Depends(permission_required(MANAGE_BRANDS)),
+    db: Session = Depends(get_db),
+):
+    try:
+        brand = get_brand_or_404(db, brand_id)
+        wallet = brand.wallet
+
+        if not wallet:
+            raise HTTPException(status_code=400, detail="Brand has no active wallet/package to update credits.")
+
+        remaining = wallet.total_credits - (wallet.used_credits or 0)
+
+        if payload.action == "deduct":
+            if remaining < payload.amount:
+                raise HTTPException(status_code=400, detail="Cannot deduct more than available credits")
+            wallet.used_credits = (wallet.used_credits or 0) + payload.amount
+        elif payload.action == "add":
+            wallet.total_credits = (wallet.total_credits or 0) + payload.amount
+
+        description = f"Admin {payload.action}ed {payload.amount} credits"
+        create_audit_log(
+            db,
+            action_by=get_actor_id(current_user),
+            action_type="brand_credits_updated",
+            target_user_id=brand.user_id,
+            description=description,
+        )
+
+        db.commit()
+        db.refresh(brand)
+
+        return {
+            "message": f"{payload.amount} credits {payload.action}ed successfully",
+            "brand": serialize_brand_list(brand),
+        }
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Could not update brand credits: {str(e)}"
         )

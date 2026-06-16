@@ -93,3 +93,38 @@ def get_sold_out_status_for_format(db: Session, format_id: int) -> bool:
     if inv:
         return inv.is_sold_out
     return True
+
+def deduct_inventory_slot(db: Session, format_id: int) -> bool:
+    ensure_inventory_for_current_week(db)
+    monday, _ = get_current_week_dates()
+    
+    inv = db.query(WeeklyInventory).filter(
+        WeeklyInventory.format_id == format_id,
+        WeeklyInventory.week_start == monday
+    ).first()
+    
+    if inv and inv.remaining_slots > 0:
+        inv.booked_slots += 1
+        inv.remaining_slots -= 1
+        if inv.remaining_slots == 0:
+            inv.is_sold_out = True
+        db.commit()
+        return True
+    return False
+
+def restore_inventory_slot(db: Session, format_id: int) -> bool:
+    ensure_inventory_for_current_week(db)
+    monday, _ = get_current_week_dates()
+    
+    inv = db.query(WeeklyInventory).filter(
+        WeeklyInventory.format_id == format_id,
+        WeeklyInventory.week_start == monday
+    ).first()
+    
+    if inv:
+        inv.booked_slots = max(0, inv.booked_slots - 1)
+        inv.remaining_slots += 1
+        inv.is_sold_out = False
+        return True
+    return False
+
