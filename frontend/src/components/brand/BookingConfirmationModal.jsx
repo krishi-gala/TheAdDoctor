@@ -22,6 +22,9 @@ export default function BookingConfirmationModal({
   if (!isOpen || !format) return null;
 
   const creditsRequired = creditType === 'prime' ? format.prime_credits : format.standard_credits;
+  const bookingTimeDisplay = timingMode === "recommended"
+    ? `${timing?.best_day || "TBD"} | TBD`
+    : customTime;
 
   const handleConfirm = async () => {
     setLoading(true);
@@ -32,7 +35,7 @@ export default function BookingConfirmationModal({
         format_slug: format.slug,
         business_type: timing?.business_type || "Generic",
         booking_date: timingMode === 'recommended' ? null : customDate,
-        booking_time: timingMode === 'recommended' ? `${timing.best_day} | ${timing.prime_time_start} - ${timing.prime_time_end}` : customTime,
+        booking_time: bookingTimeDisplay,
         timing_type: timingMode,
         credit_type: creditType,
         additional_notes: notes || null
@@ -99,7 +102,7 @@ export default function BookingConfirmationModal({
           </div>
           <div className="bcm-detail-row">
             <span className="bcm-label">Timing Type</span>
-            <span className="bcm-value" style={{ textTransform: 'capitalize' }}>{timingMode}</span>
+            <span className="bcm-value bcm-capitalize">{timingMode}</span>
           </div>
           <div className="bcm-detail-row">
             <span className="bcm-label">Date</span>
@@ -107,7 +110,7 @@ export default function BookingConfirmationModal({
           </div>
           <div className="bcm-detail-row">
             <span className="bcm-label">Time</span>
-            <span className="bcm-value">{timingMode === 'recommended' ? `${timing.best_day} | ${timing.prime_time_start} - ${timing.prime_time_end}` : customTime}</span>
+            <span className="bcm-value">{bookingTimeDisplay}</span>
           </div>
           
           <div className="bcm-divider" />

@@ -98,6 +98,10 @@
   font-weight: 500;
 }
 
+.bcm-capitalize {
+  text-transform: capitalize;
+}
+
 .bcm-highlight {
   color: #3b82f6;
   font-weight: 600;

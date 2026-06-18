@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import { CreditCard, Wallet, Calendar, AlertTriangle, ShieldCheck, ArrowUpRight } from "lucide-react";
-import TransactionHistory from "../components/brand/TransactionHistory";
 import MyCampaigns from "../components/brand/MyCampaigns";
 import "./BrandDashboard.css";
 
@@ -122,7 +121,6 @@ export default function BrandDashboard() {
           </>
         )}
 
-        <TransactionHistory />
         <MyCampaigns />
       </div>
     </>

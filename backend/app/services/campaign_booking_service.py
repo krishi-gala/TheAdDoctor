@@ -80,6 +80,16 @@ class CampaignBookingService:
         return CampaignBookingService._enrich_with_brand_name(db, bookings)
 
     @staticmethod
+    def get_approved_bookings(db: Session):
+        bookings = (
+            db.query(CampaignBooking)
+            .filter(CampaignBooking.booking_status == "approved")
+            .order_by(CampaignBooking.created_at.desc())
+            .all()
+        )
+        return CampaignBookingService._enrich_with_brand_name(db, bookings)
+
+    @staticmethod
     def update_booking_status(db: Session, booking_id: int, update_data: CampaignBookingStatusUpdate):
         booking = db.query(CampaignBooking).filter(CampaignBooking.booking_id == booking_id).first()
         if not booking:
@@ -96,6 +106,16 @@ class CampaignBookingService:
             booking.booking_date = update_data.final_date
         if update_data.final_time is not None:
             booking.booking_time = update_data.final_time
+        if update_data.format_slug is not None:
+            booking.format_slug = update_data.format_slug
+        if update_data.business_type is not None:
+            booking.business_type = update_data.business_type
+        if update_data.timing_type is not None:
+            booking.timing_type = update_data.timing_type
+        if update_data.additional_notes is not None:
+            booking.additional_notes = update_data.additional_notes
+        if update_data.credits_used is not None:
+            booking.credits_used = update_data.credits_used
             
         if new_status == "rejected" and previous_status != "rejected":
             from app.services.wallet_service import restore_credits
@@ -118,4 +138,59 @@ class CampaignBookingService:
         booking.__dict__["brand_name"] = user.company_name if user else None
         return booking
 
+    @staticmethod
+    def submit_brand_query(db: Session, booking_id: int, brand_id: int, query_message: str):
+        booking = (
+            db.query(CampaignBooking)
+            .filter(
+                CampaignBooking.booking_id == booking_id,
+                CampaignBooking.brand_id == brand_id,
+            )
+            .first()
+        )
+        if not booking:
+            raise HTTPException(status_code=404, detail="Booking not found")
+        if booking.booking_status != "approved":
+            raise HTTPException(status_code=400, detail="Queries can only be raised for approved bookings")
+        if booking.brand_query is not None and booking.brand_query.strip():
+            raise HTTPException(status_code=400, detail="A query is already pending admin response")
 
+        cleaned_query = query_message.strip()
+        if not cleaned_query:
+            raise HTTPException(status_code=400, detail="Query message cannot be empty")
+
+        booking.brand_query = cleaned_query
+        booking.brand_query_resolved = False
+        db.commit()
+        db.refresh(booking)
+        user = db.query(User).filter(User.user_id == booking.brand_id).first()
+        booking.__dict__["brand_name"] = user.company_name if user else None
+        return booking
+
+    @staticmethod
+    def get_brand_query(db: Session, booking_id: int, user: dict):
+        booking = db.query(CampaignBooking).filter(CampaignBooking.booking_id == booking_id).first()
+        if not booking:
+            raise HTTPException(status_code=404, detail="Booking not found")
+        user_permissions = user.get("permissions", [])
+        can_manage = "manage_bookings" in user_permissions or "approve_campaigns" in user_permissions
+        if booking.brand_id != user.get("user_id") and not can_manage:
+            raise HTTPException(status_code=403, detail="Not authorized to view this query")
+
+        user_record = db.query(User).filter(User.user_id == booking.brand_id).first()
+        booking.__dict__["brand_name"] = user_record.company_name if user_record else None
+        return booking
+
+    @staticmethod
+    def resolve_brand_query(db: Session, booking_id: int):
+        booking = db.query(CampaignBooking).filter(CampaignBooking.booking_id == booking_id).first()
+        if not booking:
+            raise HTTPException(status_code=404, detail="Booking not found")
+
+        booking.brand_query = None
+        booking.brand_query_resolved = True
+        db.commit()
+        db.refresh(booking)
+        user = db.query(User).filter(User.user_id == booking.brand_id).first()
+        booking.__dict__["brand_name"] = user.company_name if user else None
+        return booking

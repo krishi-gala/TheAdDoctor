@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, ForeignKey, Integer, Enum
+from sqlalchemy import Column, String, DateTime, ForeignKey, Integer, Enum, Boolean
 from sqlalchemy.sql import func
 from app.core.database import Base
 
@@ -13,6 +13,8 @@ class CampaignBooking(Base):
     booking_time = Column(String(50), nullable=False)
     timing_type = Column(String(20), nullable=False) # 'recommended' or 'custom'
     additional_notes = Column(String(500), nullable=True)
+    brand_query = Column(String(500), nullable=True)
+    brand_query_resolved = Column(Boolean, default=False, nullable=False)
     admin_notes = Column(String(500), nullable=True)
     credit_type = Column(String(20), nullable=True)
     credits_used = Column(Integer, nullable=False)

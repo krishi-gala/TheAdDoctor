@@ -102,6 +102,25 @@
   margin-top: 4px;
 }
 
+.ca-capitalize {
+  text-transform: capitalize;
+}
+
+.ca-query-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.24);
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .ca-view-btn {
   background: rgba(59, 130, 246, 0.1);
   color: #3b82f6;
@@ -204,6 +223,15 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.ca-final-grid {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.ca-final-label {
+  color: #60a5fa !important;
+}
+
 .ca-detail label {
   display: block;
   font-size: 12px;
@@ -237,6 +265,17 @@
   color: #ddd;
   font-size: 14px;
   min-height: 60px;
+}
+
+.ca-brand-query {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  padding: 12px;
+  border-radius: 8px;
+  color: #f8d899;
+  font-size: 14px;
+  min-height: 60px;
+  white-space: pre-wrap;
 }
 
 .ca-admin-input {
@@ -328,6 +367,16 @@
 
 .ca-btn-approve:hover:not(:disabled) {
   background: #059669;
+}
+
+.ca-btn-resolve {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.24);
+  color: #fbbf24;
+}
+
+.ca-btn-resolve:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.2);
 }
 
 /* Responsive adjustments */

@@ -18,9 +18,11 @@ class CampaignBookingResponse(BaseModel):
     format_slug: str
     business_type: str
     booking_date: Optional[Union[str, date]]
-    booking_time: Union[str, time]
+    booking_time: Optional[Union[str, time]]
     timing_type: str
     additional_notes: Optional[str]
+    brand_query: Optional[str]
+    brand_query_resolved: bool = False
     admin_notes: Optional[str]
     credit_type: Optional[str]
     credits_used: int
@@ -31,7 +33,15 @@ class CampaignBookingResponse(BaseModel):
         from_attributes = True
 
 class CampaignBookingStatusUpdate(BaseModel):
-    booking_status: str = Field(..., pattern="^(approved|rejected)$")
+    booking_status: str = Field(..., pattern="^(approved|rejected|completed)$")
     admin_notes: Optional[str] = Field(None, max_length=500)
     final_date: Optional[str] = Field(None, max_length=50)
     final_time: Optional[str] = Field(None, max_length=50)
+    format_slug: Optional[str] = Field(None, max_length=50)
+    business_type: Optional[str] = Field(None, max_length=50)
+    timing_type: Optional[str] = Field(None, max_length=20)
+    additional_notes: Optional[str] = Field(None, max_length=500)
+    credits_used: Optional[int] = Field(None, ge=0)
+
+class CampaignBookingQueryUpdate(BaseModel):
+    brand_query: str = Field(..., min_length=1, max_length=500)
