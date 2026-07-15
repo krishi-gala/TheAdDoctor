@@ -7,7 +7,7 @@ import {
   DollarSign, ShoppingBag, Coins, Zap, Megaphone, TrendingUp,
   BarChart3, PieChart as PieIcon, Activity, Users, Star,
   Package, Calendar, Clock, Target, Award, ChevronUp,
-  ChevronDown, Search, X, ArrowUpRight, Info, Layers, Cpu,
+  ChevronDown, ArrowUpRight, Info, Cpu,
   AlertTriangle, CheckCircle2, Circle, Ban, Timer
 } from "lucide-react";
 import { fetchReports } from "../../services/reports";
@@ -16,19 +16,7 @@ import "./Reports.css";
 // ─── Colour palette ───────────────────────────────────────
 const COLORS = ["#38bdf8", "#a78bfa", "#34d399", "#fb923c", "#f472b6", "#facc15", "#818cf8"];
 
-const STATUS_COLOR = {
-  pending:   "#fbbf24",
-  approved:  "#38bdf8",
-  completed: "#34d399",
-  rejected:  "#f87171",
-};
 
-const PROGRESS_COLOR = {
-  pending:   "linear-gradient(90deg,#fbbf24,#f59e0b)",
-  approved:  "linear-gradient(90deg,#38bdf8,#0284c7)",
-  completed: "linear-gradient(90deg,#34d399,#059669)",
-  rejected:  "linear-gradient(90deg,#f87171,#dc2626)",
-};
 
 // ─── Formatters ────────────────────────────────────────────
 const fmtCurrency = (v) =>
@@ -100,21 +88,7 @@ function ChartTooltip({ active, payload, label, formatValue }) {
   );
 }
 
-// ─── Status Badge ──────────────────────────────────────────
-function StatusBadge({ status }) {
-  const icons = {
-    pending:   <Timer size={11} />,
-    approved:  <CheckCircle2 size={11} />,
-    completed: <Star size={11} />,
-    rejected:  <Ban size={11} />,
-  };
-  return (
-    <span className={`rpt-badge rpt-badge--${status}`}>
-      {icons[status] || <Circle size={11} />}
-      {status}
-    </span>
-  );
-}
+
 
 // ─── Loading skeleton ──────────────────────────────────────
 function LoadingSkeleton() {
@@ -645,266 +619,6 @@ function BrandLeaderboard({ data }) {
   );
 }
 
-// ══════════════════════════════════════════════════════════
-// SIDE DRAWER
-// ══════════════════════════════════════════════════════════
-function CampaignDrawer({ campaign, onClose }) {
-  if (!campaign) return null;
-
-  const progress = campaign.progress ?? 0;
-  const progressColor = PROGRESS_COLOR[campaign.status] ?? "linear-gradient(90deg,#38bdf8,#0284c7)";
-
-  return (
-    <>
-      <div className="rpt-drawer-overlay" onClick={onClose} />
-      <div className="rpt-drawer">
-        <div className="rpt-drawer-header">
-          <h2 className="rpt-drawer-title">{campaign.campaign_name}</h2>
-          <button className="rpt-drawer-close" onClick={onClose} type="button">
-            <X size={16} />
-          </button>
-        </div>
-        <div className="rpt-drawer-body">
-          <div className="rpt-drawer-status-row">
-            <StatusBadge status={campaign.status} />
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
-              ID #{campaign.booking_id}
-            </span>
-          </div>
-
-          <div className="rpt-drawer-section">
-            <div className="rpt-drawer-section-label">Brand Information</div>
-            <div className="rpt-drawer-grid">
-              <div className="rpt-drawer-field">
-                <div className="rpt-drawer-field-label">Brand Name</div>
-                <div className="rpt-drawer-field-value">{campaign.brand_name}</div>
-              </div>
-              <div className="rpt-drawer-field">
-                <div className="rpt-drawer-field-label">Business Type</div>
-                <div className="rpt-drawer-field-value" style={{ textTransform: "capitalize" }}>
-                  {campaign.business_type || "—"}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rpt-drawer-section">
-            <div className="rpt-drawer-section-label">Campaign Details</div>
-            <div className="rpt-drawer-grid">
-              <div className="rpt-drawer-field">
-                <div className="rpt-drawer-field-label">Ad Format</div>
-                <div className="rpt-drawer-field-value">{campaign.ad_format}</div>
-              </div>
-              <div className="rpt-drawer-field">
-                <div className="rpt-drawer-field-label">Credits Used</div>
-                <div className="rpt-drawer-field-value rpt-drawer-field-value--accent">
-                  {campaign.credits_used} Credits
-                </div>
-              </div>
-              <div className="rpt-drawer-field">
-                <div className="rpt-drawer-field-label">Booking Date</div>
-                <div className="rpt-drawer-field-value">{campaign.booking_date || "—"}</div>
-              </div>
-              <div className="rpt-drawer-field">
-                <div className="rpt-drawer-field-label">Booking Time</div>
-                <div className="rpt-drawer-field-value">{campaign.booking_time || "—"}</div>
-              </div>
-              <div className="rpt-drawer-field">
-                <div className="rpt-drawer-field-label">Weekly Slot Remaining</div>
-                <div className="rpt-drawer-field-value">
-                  {campaign.weekly_slot_remaining != null
-                    ? `${campaign.weekly_slot_remaining} / ${campaign.weekly_slot_limit ?? "?"}`
-                    : "—"}
-                </div>
-              </div>
-              <div className="rpt-drawer-field">
-                <div className="rpt-drawer-field-label">Created At</div>
-                <div className="rpt-drawer-field-value">{fmtDate(campaign.created_at)}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rpt-drawer-progress">
-            <div className="rpt-drawer-progress-header">
-              <span>Campaign Progress</span>
-              <span style={{ color: STATUS_COLOR[campaign.status] ?? "#fff", fontWeight: 700 }}>
-                {progress}%
-              </span>
-            </div>
-            <div className="rpt-drawer-progress-bar-bg">
-              <div
-                className="rpt-drawer-progress-fill"
-                style={{ width: `${progress}%`, background: progressColor }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-// ══════════════════════════════════════════════════════════
-// BRAND CAMPAIGN OVERVIEW
-// ══════════════════════════════════════════════════════════
-function BrandCampaignOverview({ data }) {
-  const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [filterFormat, setFilterFormat] = useState("all");
-  const [filterBusiness, setFilterBusiness] = useState("all");
-  const [selectedCampaign, setSelectedCampaign] = useState(null);
-
-  const formats = useMemo(() => {
-    if (!data) return [];
-    return [...new Set(data.map((d) => d.ad_format).filter(Boolean))].sort();
-  }, [data]);
-
-  const businessTypes = useMemo(() => {
-    if (!data) return [];
-    return [...new Set(data.map((d) => d.business_type).filter(Boolean))].sort();
-  }, [data]);
-
-  const filtered = useMemo(() => {
-    if (!data) return [];
-    const q = search.toLowerCase();
-    return data.filter((row) => {
-      const matchSearch =
-        !q ||
-        row.brand_name?.toLowerCase().includes(q) ||
-        row.campaign_name?.toLowerCase().includes(q);
-      const matchStatus = filterStatus === "all" || row.status === filterStatus;
-      const matchFormat = filterFormat === "all" || row.ad_format === filterFormat;
-      const matchBusiness = filterBusiness === "all" || row.business_type === filterBusiness;
-      return matchSearch && matchStatus && matchFormat && matchBusiness;
-    });
-  }, [data, search, filterStatus, filterFormat, filterBusiness]);
-
-  return (
-    <div className="rpt-card" style={{ "--glow": "#38bdf8" }}>
-      <div className="rpt-card-glow" />
-      <div className="rpt-card-title">
-        <Layers size={17} />
-        Brand Campaign Overview
-        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", fontWeight: 400, marginLeft: "auto" }}>
-          All campaigns · click row for details
-        </span>
-      </div>
-
-      <div className="rpt-filters">
-        <div className="rpt-search-wrap">
-          <Search size={14} className="rpt-search-icon" />
-          <input
-            className="rpt-search"
-            placeholder="Search by brand or campaign name…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <select
-          className="rpt-filter-select"
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-        >
-          <option value="all">All Statuses</option>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="completed">Completed</option>
-          <option value="rejected">Rejected</option>
-        </select>
-        <select
-          className="rpt-filter-select"
-          value={filterFormat}
-          onChange={(e) => setFilterFormat(e.target.value)}
-        >
-          <option value="all">All Formats</option>
-          {formats.map((f) => (
-            <option key={f} value={f}>{f}</option>
-          ))}
-        </select>
-        <select
-          className="rpt-filter-select"
-          value={filterBusiness}
-          onChange={(e) => setFilterBusiness(e.target.value)}
-        >
-          <option value="all">All Business Types</option>
-          {businessTypes.map((b) => (
-            <option key={b} value={b}>{b}</option>
-          ))}
-        </select>
-        <span className="rpt-filter-count">{filtered.length} results</span>
-      </div>
-
-      <div className="rpt-campaign-table-wrap">
-        {filtered.length === 0 ? (
-          <div className="rpt-empty">No campaigns match your filters.</div>
-        ) : (
-          <table className="rpt-campaign-table">
-            <thead>
-              <tr>
-                <th>Brand</th>
-                <th>Campaign</th>
-                <th>Ad Format</th>
-                <th>Business Type</th>
-                <th>Booking Date</th>
-                <th>Booking Time</th>
-                <th>Status</th>
-                <th>Credits Used</th>
-                <th>Weekly Slot</th>
-                <th>Progress</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((row) => {
-                const pct = row.progress ?? 0;
-                const pColor = PROGRESS_COLOR[row.status] ?? "linear-gradient(90deg,#38bdf8,#0284c7)";
-                return (
-                  <tr key={row.booking_id} onClick={() => setSelectedCampaign(row)}>
-                    <td style={{ fontWeight: 600, color: "#fff" }}>{row.brand_name}</td>
-                    <td style={{ color: "rgba(255,255,255,0.6)", fontSize: 12 }}>{row.campaign_name}</td>
-                    <td>{row.ad_format}</td>
-                    <td style={{ textTransform: "capitalize" }}>{row.business_type || "—"}</td>
-                    <td>{row.booking_date || "—"}</td>
-                    <td>{row.booking_time || "—"}</td>
-                    <td><StatusBadge status={row.status} /></td>
-                    <td style={{ fontWeight: 600 }}>{row.credits_used}</td>
-                    <td>
-                      {row.weekly_slot_remaining != null ? (
-                        <span className="rpt-weekly-slot">
-                          <span className="rpt-weekly-slot-num">{row.weekly_slot_remaining}</span>
-                          <span className="rpt-weekly-slot-label">
-                            / {row.weekly_slot_limit ?? "?"} left
-                          </span>
-                        </span>
-                      ) : "—"}
-                    </td>
-                    <td>
-                      <div className="rpt-progress-cell">
-                        <div className="rpt-progress-bar-bg">
-                          <div
-                            className="rpt-progress-bar-fill"
-                            style={{ width: `${pct}%`, background: pColor }}
-                          />
-                        </div>
-                        <span className="rpt-progress-pct">{pct}%</span>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {selectedCampaign && (
-        <CampaignDrawer
-          campaign={selectedCampaign}
-          onClose={() => setSelectedCampaign(null)}
-        />
-      )}
-    </div>
-  );
-}
 
 // ══════════════════════════════════════════════════════════
 // AD FORMAT ANALYTICS
@@ -1138,13 +852,6 @@ export default function Reports() {
             <BrandLeaderboard data={data.brand_leaderboard ?? []} />
           </div>
 
-          {/* 6 · Brand Campaign Overview */}
-          <div>
-            <div className="rpt-section-title">
-              <Layers size={13} /> Brand Campaign Overview
-            </div>
-            <BrandCampaignOverview data={data.brand_campaign_overview ?? []} />
-          </div>
 
           {/* 7 · Ad Format Analytics */}
           <div>

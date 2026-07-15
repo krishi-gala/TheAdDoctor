@@ -41,7 +41,7 @@ export const ADMIN_MENU_ITEMS = [
   },
   {
     id: "campaigns",
-    label: "Campaign Approval",
+    label: "Campaigns",
     path: "/admin/campaigns",
     icon: Megaphone,
     permission: PERMISSIONS.APPROVE_CAMPAIGNS,

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { CheckCircle2, Loader2, MessageSquare, Pencil, RotateCcw } from "lucide-react";
 import { ADMIN_MENU_ITEMS } from "../../config/adminMenu";
 import ConfirmModal from "../../components/admin/ConfirmModal";
-import CampaignApproval from "./CampaignApproval";
+import CampaignsPage from "./CampaignsPage";
 import { fetchApprovedBookings, manageBooking, resolveBrandQuery } from "../../services/campaignBookings";
 import "./AdminPlaceholder.css";
 
@@ -373,7 +373,7 @@ export default function AdminPlaceholder() {
   const { pathname } = useLocation();
   
   if (pathname === '/admin/campaigns') {
-    return <CampaignApproval />;
+    return <CampaignsPage />;
   }
 
   if (pathname === '/admin/bookings') {
