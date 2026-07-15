@@ -20,7 +20,7 @@ const stats = [
   {
     icon: Package,
     label: "Total Packages",
-    value: dashboardData?.total_packages || 0,
+    value: dashboardData?.executive_summary?.total_packages ?? dashboardData?.total_packages ?? dashboardData?.total_packages_purchased ?? 0,
     change: "Active in system",
     positive: true,
     iconBg: "rgba(236,72,153,0.18)",

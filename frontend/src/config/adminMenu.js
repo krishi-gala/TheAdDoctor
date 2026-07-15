@@ -5,6 +5,8 @@ import {
   Package,
   CalendarDays,
   BarChart3,
+  Boxes,
+  FileBarChart2,
 } from "lucide-react";
 import { PERMISSIONS } from "../constants/permissions";
 
@@ -55,14 +57,14 @@ export const ADMIN_MENU_ITEMS = [
     id: "inventory",
     label: "Inventory Dashboard",
     path: "/admin/inventory",
-    icon: BarChart3,
+    icon: Boxes,
     permission: PERMISSIONS.MANAGE_BOOKINGS,
   },
   {
     id: "reports",
     label: "Reports",
     path: "/admin/reports",
-    icon: BarChart3,
+    icon: FileBarChart2,
     permission: PERMISSIONS.VIEW_REPORTS,
   },
 ];

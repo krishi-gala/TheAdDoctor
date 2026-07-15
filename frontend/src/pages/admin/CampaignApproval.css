@@ -13,52 +13,55 @@
   margin: 0;
   color: #fff;
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .ca-subtitle {
   margin: 4px 0 0 0;
-  color: #888;
+  color: rgba(255,255,255,0.4);
   font-size: 14px;
 }
 
 .ca-filters {
   display: flex;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.2);
+  gap: 4px;
+  background: rgba(255,255,255,0.04);
   padding: 4px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .ca-filter-btn {
   background: transparent;
   border: none;
-  color: #888;
+  color: rgba(255,255,255,0.45);
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
+  font-family: 'Inter', sans-serif;
   transition: all 0.2s;
 }
 
 .ca-filter-btn:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.06);
 }
 
 .ca-filter-btn.active {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: rgba(14,165,233,0.18);
+  border: 1px solid rgba(56,189,248,0.25);
+  color: #7dd3fc;
 }
 
 .ca-table-wrap {
-  background: rgba(20, 25, 40, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
   overflow-x: auto;
   overflow-y: hidden;
+  backdrop-filter: blur(16px);
 }
 
 .ca-table {
@@ -69,36 +72,36 @@
 }
 
 .ca-table th {
-  padding: 16px;
+  padding: 18px 20px;
   font-size: 12px;
   text-transform: uppercase;
-  color: #666;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.45);
   font-weight: 600;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
 .ca-table td {
-  padding: 16px;
+  padding: 16px 20px;
   font-size: 14px;
-  color: #ccc;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  color: rgba(255,255,255,0.85);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
   vertical-align: middle;
 }
 
 .ca-table tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255,255,255,0.03);
 }
 
 .ca-fmt {
   color: #fff;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: capitalize;
 }
 
 .ca-biz {
   font-size: 12px;
-  color: #888;
+  color: rgba(255,255,255,0.4);
   margin-top: 4px;
 }
 
@@ -122,49 +125,55 @@
 }
 
 .ca-view-btn {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  padding: 6px 12px;
-  border-radius: 6px;
+  background: rgba(14,165,233,0.1);
+  color: #38bdf8;
+  border: 1px solid rgba(14,165,233,0.2);
+  padding: 6px 14px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
+  font-family: 'Inter', sans-serif;
   transition: all 0.2s;
 }
 
 .ca-view-btn:hover {
-  background: rgba(59, 130, 246, 0.2);
+  background: rgba(14,165,233,0.2);
 }
 
 .ca-loader, .ca-error, .ca-empty {
-  padding: 40px;
+  padding: 48px 24px;
   text-align: center;
-  color: #888;
+  color: rgba(255,255,255,0.45);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 12px;
+  font-size: 14px;
 }
 
 .ca-spinner {
-  animation: spin 1s linear infinite;
-  color: #3b82f6;
+  animation: ca-spin 1s linear infinite;
+  color: #0ea5e9;
 }
 
-.ca-error { color: #ef4444; }
+@keyframes ca-spin { to { transform: rotate(360deg); } }
+
+.ca-error { color: #f87171; }
 
 .ca-retry {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  color: #f87171;
   padding: 6px 16px;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
 }
 
 /* Modal */
@@ -174,7 +183,7 @@
   left: var(--sidebar-width, 260px);
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -186,28 +195,36 @@
 }
 
 .ca-modal {
-  background: rgba(20, 25, 40, 0.95);
+  background: rgba(9, 14, 26, 0.97);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  border-radius: 20px;
   width: 100%;
   max-width: 600px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   max-height: 90vh;
   overflow: hidden;
+  animation: ca-scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ca-scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 .ca-modal-title {
   margin: 0;
-  padding: 30px 30px 20px 30px;
+  padding: 28px 28px 20px 28px;
   color: #fff;
   font-size: 20px;
+  font-weight: 700;
   flex-shrink: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
 .ca-modal-body {
-  padding: 0 30px;
+  padding: 20px 28px;
   overflow-y: auto;
   flex: 1;
 }
@@ -217,26 +234,29 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-bottom: 24px;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(255,255,255,0.03);
   padding: 20px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .ca-final-grid {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.2);
+  background: rgba(14,165,233,0.06);
+  border-color: rgba(14,165,233,0.18);
 }
 
 .ca-final-label {
-  color: #60a5fa !important;
+  color: #7dd3fc !important;
 }
 
 .ca-detail label {
   display: block;
   font-size: 12px;
-  color: #888;
+  color: rgba(255,255,255,0.4);
   margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
 }
 
 .ca-detail span {
@@ -252,17 +272,20 @@
 
 .ca-notes-section label {
   display: block;
-  font-size: 13px;
-  color: #888;
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
   margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
 }
 
 .ca-brand-notes {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 12px;
-  border-radius: 8px;
-  color: #ddd;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.85);
   font-size: 14px;
   min-height: 60px;
 }
@@ -271,7 +294,7 @@
   background: rgba(245, 158, 11, 0.08);
   border: 1px solid rgba(245, 158, 11, 0.22);
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #f8d899;
   font-size: 14px;
   min-height: 60px;
@@ -280,58 +303,63 @@
 
 .ca-admin-input {
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 8px 12px;
   color: #fff;
   font-family: inherit;
   font-size: 14px;
   margin-top: 4px;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .ca-admin-input:focus {
   outline: none;
-  border-color: rgba(59, 130, 246, 0.5);
+  border-color: rgba(14,165,233,0.5);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.12);
 }
 
 .ca-admin-textarea {
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 12px;
   color: #fff;
   font-family: inherit;
   font-size: 14px;
   min-height: 80px;
   resize: vertical;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .ca-admin-textarea:focus {
   outline: none;
-  border-color: rgba(59, 130, 246, 0.5);
+  border-color: rgba(14,165,233,0.5);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.12);
 }
 
 .ca-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  padding: 24px 30px 30px 30px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 28px 28px 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   flex-shrink: 0;
 }
 
 .ca-btn {
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
 }
 
 .ca-btn:disabled {
@@ -340,19 +368,20 @@
 }
 
 .ca-btn-cancel {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7);
 }
 
 .ca-btn-cancel:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255,255,255,0.1);
+  color: #fff;
 }
 
 .ca-btn-reject {
   background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  color: #f87171;
 }
 
 .ca-btn-reject:hover:not(:disabled) {
@@ -360,13 +389,13 @@
 }
 
 .ca-btn-approve {
-  background: #10b981;
+  background: linear-gradient(135deg, #10b981, #059669);
   border: none;
   color: #fff;
 }
 
 .ca-btn-approve:hover:not(:disabled) {
-  background: #059669;
+  opacity: 0.9;
 }
 
 .ca-btn-resolve {
@@ -388,7 +417,7 @@
     padding: 20px 20px 16px 20px;
   }
   .ca-modal-body {
-    padding: 0 20px;
+    padding: 16px 20px;
   }
   .ca-actions {
     padding: 16px 20px 20px 20px;

@@ -17,7 +17,7 @@
 @keyframes aaf-spin { to { transform: rotate(360deg); } }
 
 .aaf-table-container {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
   overflow: hidden;
@@ -28,7 +28,7 @@
 }
 .aaf-th {
   padding: 16px; font-size: 12px; font-weight: 600;
-  color: rgba(255,255,255,0.4); text-transform: uppercase;
+  color: rgba(255,255,255,0.45); text-transform: uppercase;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .aaf-td {
@@ -37,7 +37,7 @@
 }
 .aaf-td-bold { font-weight: 600; }
 .aaf-tr:last-child .aaf-td { border-bottom: none; }
-.aaf-tr:hover { background: rgba(255,255,255,0.02); }
+.aaf-tr:hover { background: rgba(255,255,255,0.03); }
 
 .aaf-btn-edit {
   background: rgba(255,255,255,0.08); border: none;
@@ -61,7 +61,7 @@
   position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px;
   background-color: white; transition: .3s; border-radius: 50%;
 }
-input:checked + .aaf-slider { background-color: #7c3aed; }
+input:checked + .aaf-slider { background-color: #0ea5e9; }
 input:checked + .aaf-slider:before { transform: translateX(16px); }
 
 .aaf-switch-scaled { transform: scale(0.8); margin: 0; }
@@ -74,8 +74,8 @@ input:checked + .aaf-slider:before { transform: translateX(16px); }
   left: var(--sidebar-width, 260px);
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -88,13 +88,20 @@ input:checked + .aaf-slider:before { transform: translateX(16px); }
 .aaf-modal-overlay.high-z, .high-z { z-index: 110; }
 
 .aaf-modal {
-  background: #1e1b4b; border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(9, 14, 26, 0.97); border: 1px solid rgba(255,255,255,0.1);
   border-radius: 20px; width: 400px; max-width: 100%; padding: 24px;
   max-height: 90vh; overflow-y: auto; position: relative;
   box-sizing: border-box;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+  animation: aaf-scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 /* Large modal: fills available content width up to 860px */
 .aaf-modal-large { width: 860px; max-width: 100%; }
+
+@keyframes aaf-scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
 
 .aaf-modal-close {
   position: absolute; top: 20px; right: 20px; background: transparent; border: none;
@@ -113,23 +120,34 @@ input:checked + .aaf-slider:before { transform: translateX(16px); }
 .aaf-form-group-active-toggle { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
 .aaf-form-group-active-label { margin-bottom: 0; }
 
-.aaf-form-label { display: block; font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+.aaf-form-label { display: block; font-size: 12px; color: rgba(255,255,255,0.55); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
 .aaf-form-input, .aaf-form-select {
-  width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-  color: white; padding: 10px 12px; border-radius: 8px; font-family: inherit; font-size: 14px;
+  width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: white; padding: 10px 12px; border-radius: 10px; font-family: inherit; font-size: 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
-.aaf-form-input:focus, .aaf-form-select:focus { outline: none; border-color: #7c3aed; }
-.aaf-form-select option { background: #1e1b4b; }
+.aaf-form-input:focus, .aaf-form-select:focus {
+  outline: none;
+  border-color: rgba(14,165,233,0.5);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
+}
+.aaf-form-select option { background: #090e1a; }
 
 .aaf-modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
 .aaf-btn-cancel {
-  background: transparent; border: 1px solid rgba(255,255,255,0.1); color: white;
-  padding: 8px 16px; border-radius: 8px; cursor: pointer;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+  padding: 8px 16px; border-radius: 10px; cursor: pointer; font-family: 'Inter', sans-serif;
+  font-size: 14px; font-weight: 500;
+  transition: background 0.15s;
 }
+.aaf-btn-cancel:hover { background: rgba(255,255,255,0.1); }
 .aaf-btn-save {
-  background: #7c3aed; border: none; color: white;
-  padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;
+  background: linear-gradient(135deg, #0ea5e9, #2563eb); border: none; color: white;
+  padding: 8px 20px; border-radius: 10px; cursor: pointer; font-weight: 600;
+  font-family: 'Inter', sans-serif; font-size: 14px;
+  transition: opacity 0.15s;
 }
+.aaf-btn-save:hover { opacity: 0.9; }
 
 /* Smart Timing Section */
 .st-header {
@@ -138,19 +156,22 @@ input:checked + .aaf-slider:before { transform: translateX(16px); }
 .st-header-flex-row { display: flex; gap: 16px; align-items: center; }
 
 .st-business-select {
-  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-  color: white; padding: 10px 16px; border-radius: 8px; font-family: inherit; font-size: 14px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: white; padding: 10px 16px; border-radius: 10px; font-family: inherit; font-size: 14px;
   cursor: pointer; min-width: 200px;
+  transition: border-color 0.15s;
 }
-.st-business-select:focus { outline: none; border-color: #7c3aed; }
-.st-business-select option { background: #1e1b4b; }
+.st-business-select:focus { outline: none; border-color: rgba(14,165,233,0.5); }
+.st-business-select option { background: #090e1a; }
 
 .st-add-btn {
-  background: #7c3aed; border: none; color: white;
-  padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;
+  background: linear-gradient(135deg, #0ea5e9, #2563eb); border: none; color: white;
+  padding: 10px 16px; border-radius: 10px; cursor: pointer; font-weight: 600;
   display: flex; align-items: center; gap: 8px; font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  transition: opacity 0.15s;
 }
-.st-add-btn:hover { background: #6d28d9; }
+.st-add-btn:hover { opacity: 0.9; }
 
 .st-chip {
   padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;

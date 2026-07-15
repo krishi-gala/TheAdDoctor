@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useOutletContext, Link } from "react-router-dom";
-import { CreditCard, Wallet, Calendar, AlertTriangle, ShieldCheck, ArrowUpRight } from "lucide-react";
+import { CreditCard, Wallet, Calendar, AlertTriangle, ShieldCheck, ArrowUpRight, Clock } from "lucide-react";
 import MyCampaigns from "../components/brand/MyCampaigns";
 import "./BrandDashboard.css";
 
@@ -34,6 +34,14 @@ export default function BrandDashboard() {
   const used = wallet?.used_credits ?? 0;
   const percentRemaining = total > 0 ? Math.round((remaining / total) * 100) : 0;
 
+  // Compute days until expiry for the warning banner
+  const daysUntilExpiry = (() => {
+    if (!wallet?.expiry_date || wallet?.is_expired) return null;
+    const diff = new Date(wallet.expiry_date) - new Date();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  })();
+  const isExpiringSoon = daysUntilExpiry !== null && daysUntilExpiry <= 5;
+
   return (
     <>
       <div>
@@ -57,6 +65,23 @@ export default function BrandDashboard() {
                 </div>
                 <Link to="/brand/buy-package" className="brand-dashboard-alert-cta">
                   Buy Package
+                  <ArrowUpRight size={15} />
+                </Link>
+              </div>
+            )}
+
+            {isExpiringSoon && (
+              <div className="brand-dashboard-expiry-warning">
+                <div className="brand-dashboard-alert-banner-left">
+                  <Clock size={20} />
+                  <span>
+                    Your package <strong>{wallet.active_package}</strong> expires in{" "}
+                    <strong>{daysUntilExpiry} day{daysUntilExpiry !== 1 ? "s" : ""}</strong>
+                    {" "}on {formatDate(wallet.expiry_date)}. Renew early to avoid interruption.
+                  </span>
+                </div>
+                <Link to="/brand/buy-package" className="brand-dashboard-expiry-cta">
+                  Renew Now
                   <ArrowUpRight size={15} />
                 </Link>
               </div>

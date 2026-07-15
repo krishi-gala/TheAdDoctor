@@ -61,7 +61,12 @@ def update_ad_format(
         db=db,
         action_by=admin_id,
         action_type="format_update",
-        description=f"Updated Ad Format {ad_format.name}"
+        description=f'Admin updated Ad Format "{ad_format.name}"',
+        target_type="ad_format",
+        target_id=ad_format.format_id,
+        metadata={"format_name": ad_format.name},
+        severity="info",
+        is_notification=False
     )
     
     return ad_format
@@ -84,7 +89,12 @@ def update_ad_format_status(
         db=db,
         action_by=admin_id,
         action_type="format_status_change",
-        description=f"Changed status of Ad Format {ad_format.name} to {status_data.is_active}"
+        description=f'Admin {"activated" if status_data.is_active else "deactivated"} Ad Format "{ad_format.name}"',
+        target_type="ad_format",
+        target_id=ad_format.format_id,
+        metadata={"format_name": ad_format.name, "is_active": status_data.is_active},
+        severity="info",
+        is_notification=False
     )
     
     return ad_format

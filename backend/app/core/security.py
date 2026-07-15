@@ -24,6 +24,19 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(
 security = HTTPBearer()
 
 
+class AuthUser(dict):
+    """Dictionary-like user context that also supports attribute access."""
+
+    def __getattr__(self, item):
+        try:
+            return self[item]
+        except KeyError as exc:
+            raise AttributeError(item) from exc
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+
 def create_access_token(data: dict):
 
     to_encode = data.copy()
@@ -56,7 +69,7 @@ def get_current_user(
             algorithms=[ALGORITHM]
         )
 
-        return payload
+        return AuthUser(payload)
 
     except JWTError:
         raise HTTPException(

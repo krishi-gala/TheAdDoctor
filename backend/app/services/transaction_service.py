@@ -68,7 +68,12 @@ def purchase_package(
         action_by=actor_id,
         action_type="package_purchase",
         target_user_id=brand.user_id,
-        description=f"Brand purchased {package.package_name}",
+        description=f'Brand "{brand.company_name}" purchased package "{package.package_name}"',
+        target_type="transaction",
+        target_id=transaction.transaction_id,
+        metadata={"package_name": package.package_name, "credits": package.credits, "amount_paid": package.price},
+        severity="success",
+        is_notification=True
     )
 
     db.commit()

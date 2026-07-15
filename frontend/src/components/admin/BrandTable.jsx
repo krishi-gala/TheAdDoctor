@@ -76,16 +76,22 @@ function BrandRow({ brand, onEdit, onDelete, onStatusClick, onView, onResetPassw
 
       <td>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>{brand.remaining_credits || 0} Credits</span>
-            <button 
-                type="button" 
-                className="bt-icon-btn" 
-                style={{ padding: '4px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af' }}
-                title="Edit Credits" 
-                onClick={() => onEditCredits(brand)}
-            >
-                <Pencil size={14} />
-            </button>
+            {brand.remaining_credits === null || brand.remaining_credits === undefined ? (
+              <span style={{ color: 'rgba(255,255,255,0.25)', fontStyle: 'italic', fontSize: '13px' }}>—</span>
+            ) : (
+              <>
+                <span>{brand.remaining_credits} Credits</span>
+                <button 
+                    type="button" 
+                    className="bt-icon-btn" 
+                    style={{ padding: '4px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af' }}
+                    title="Edit Credits" 
+                    onClick={() => onEditCredits(brand)}
+                >
+                    <Pencil size={14} />
+                </button>
+              </>
+            )}
         </div>
       </td>
 

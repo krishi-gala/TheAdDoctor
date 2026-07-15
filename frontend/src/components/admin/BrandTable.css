@@ -14,6 +14,11 @@
   border: 1px solid rgba(255,255,255,0.1);
   background: rgba(255,255,255,0.06); color: #fff;
   padding: 0 14px 0 42px; outline: none; font-family: 'Inter', sans-serif;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.bt-search input:focus {
+  border-color: rgba(14,165,233,0.5);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.12);
 }
 .bt-search input::placeholder { color: rgba(255,255,255,0.3); }
 .bt-search-icon {
@@ -27,17 +32,19 @@
   padding: 0 14px; outline: none; font-family: 'Inter', sans-serif;
   font-size: 13px; cursor: pointer;
 }
-.bt-filter option { background: #1e1550; }
+.bt-filter option { background: #090e1a; }
 .bt-retry { display: inline-flex; align-items: center; gap: 6px; }
 .bt-btn {
   height: 42px; padding: 0 18px; border: none; border-radius: 12px;
-  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
   color: white; font-weight: 600; cursor: pointer;
   display: flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif;
+  transition: opacity 0.15s;
 }
+.bt-btn:hover { opacity: 0.9; }
 .bt-table-wrap {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 24px; overflow-x: auto; overflow-y: hidden; backdrop-filter: blur(18px);
 }
 .bt-table { width: 100%; min-width: 800px; border-collapse: collapse; table-layout: fixed; }
@@ -47,7 +54,7 @@
 }
 .bt-table th.bt-sortable { cursor: pointer; user-select: none; transition: color 0.15s; }
 .bt-table th.bt-sortable:hover { color: rgba(255,255,255,0.7); }
-.bt-table th.bt-sorted { color: #c4b5fd; }
+.bt-table th.bt-sorted { color: #7dd3fc; }
 .bt-col-company { width: 22%; }
 .bt-col-contact { width: 28%; }
 .bt-col-package { width: 14%; }
@@ -82,10 +89,11 @@
 .bt-more-menu {
   position: absolute; right: 0; top: calc(100% + 6px);
   min-width: 168px; padding: 6px;
-  background: rgba(30, 20, 70, 0.98);
+  background: rgba(9, 14, 26, 0.98);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 12px; z-index: 20;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  backdrop-filter: blur(16px);
 }
 .bt-more-item {
   display: flex; align-items: center; gap: 10px;
@@ -126,6 +134,7 @@
   background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
   color: rgba(255,255,255,0.7); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s;
 }
 .bt-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .bt-page-btn:not(:disabled):hover { background: rgba(255,255,255,0.12); color: #fff; }

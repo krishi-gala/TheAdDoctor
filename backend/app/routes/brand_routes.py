@@ -12,9 +12,10 @@ from app.models.package import Package
 from app.auth.permission_names import MANAGE_BRANDS
 from app.auth.permissions import permission_required
 from app.core.database import SessionLocal , get_db
+from app.models.audit_log import AuditLog
 from app.core.password import hash_password
 from app.models.user import User
-from app.schemas.brand_schema import BrandCreate, BrandStatusPatch, BrandUpdate, BrandCreditsUpdate
+from app.schemas.brand_schema import BrandCreate, BrandStatusPatch, BrandUpdate, BrandCreditsUpdate, BrandPasswordReset
 from app.services.audit_service import create_audit_log
 from app.services.brand_service import (
     apply_search,
@@ -96,7 +97,7 @@ def get_brand(
     db: Session = Depends(get_db),
 ):
     brand = get_brand_or_404(db, brand_id)
-    return {"brand": serialize_brand_detail(brand)}
+    return {"brand": serialize_brand_detail(db, brand)}
 
 
 @router.post("/brands", status_code=201)
@@ -128,7 +129,12 @@ def create_brand(
             action_by=get_actor_id(current_user),
             action_type="brand_create",
             target_user_id=brand.user_id,
-            description="Admin created brand",
+            description=f'Admin created brand "{brand.company_name}"',
+            target_type="brand",
+            target_id=brand.user_id,
+            metadata={"brand_name": brand.company_name, "email": brand.email},
+            severity="success",
+            is_notification=False
         )
         db.commit()
         db.refresh(brand)
@@ -243,7 +249,12 @@ def update_brand(
             action_by=get_actor_id(current_user),
             action_type="brand_update",
             target_user_id=brand.user_id,
-            description="Admin updated brand",
+            description=f'Admin updated brand "{brand.company_name}"',
+            target_type="brand",
+            target_id=brand.user_id,
+            metadata={"brand_name": brand.company_name},
+            severity="success",
+            is_notification=False
         )
 
         db.commit()
@@ -297,7 +308,12 @@ def update_brand_status(
             action_by=get_actor_id(current_user),
             action_type="brand_status_updated",
             target_user_id=brand.user_id,
-            description=description,
+            description=f'Admin {"activated" if payload.is_active else "deactivated"} brand "{brand.company_name}"',
+            target_type="brand",
+            target_id=brand.user_id,
+            metadata={"brand_name": brand.company_name, "is_active": payload.is_active},
+            severity="info",
+            is_notification=False
         )
 
         db.commit()
@@ -348,7 +364,12 @@ def update_brand_credits(
             action_by=get_actor_id(current_user),
             action_type="brand_credits_updated",
             target_user_id=brand.user_id,
-            description=description,
+            description=f'Admin {payload.action}ed {payload.amount} credits for brand "{brand.company_name}"',
+            target_type="brand",
+            target_id=brand.user_id,
+            metadata={"brand_name": brand.company_name, "action": payload.action, "amount": payload.amount},
+            severity="success",
+            is_notification=True
         )
 
         db.commit()
@@ -369,3 +390,69 @@ def update_brand_credits(
             status_code=500,
             detail=f"Could not update brand credits: {str(e)}"
         )
+
+
+@router.patch("/brands/{brand_id}/reset-password")
+def reset_brand_password(
+    brand_id: int,
+    payload: BrandPasswordReset,
+    current_user: dict = Depends(permission_required(MANAGE_BRANDS)),
+    db: Session = Depends(get_db),
+):
+    try:
+        brand = get_brand_or_404(db, brand_id)
+
+        brand.password_hash = hash_password(payload.password)
+
+        create_audit_log(
+            db,
+            action_by=get_actor_id(current_user),
+            action_type="brand_password_reset",
+            target_user_id=brand.user_id,
+            description=f'Admin reset password for brand "{brand.company_name}"',
+            target_type="brand",
+            target_id=brand.user_id,
+            metadata={"brand_name": brand.company_name},
+            severity="warning",
+            is_notification=False
+        )
+
+        db.commit()
+
+        return {"message": "Password reset successfully"}
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Could not reset password: {str(e)}"
+        )
+
+@router.get("/brands/{brand_id}/history")
+def get_brand_history(
+    brand_id: int,
+    current_user: dict = Depends(permission_required(MANAGE_BRANDS)),
+    db: Session = Depends(get_db),
+):
+    brand = get_brand_or_404(db, brand_id)
+    logs = db.query(AuditLog).filter(
+        AuditLog.target_user_id == brand.user_id
+    ).order_by(AuditLog.created_at.desc()).all()
+
+    return {
+        "history": [
+            {
+                "audit_id": log.audit_id,
+                "action_type": log.action_type,
+                "description": log.description,
+                "severity": log.severity,
+                "created_at": log.created_at.isoformat() if log.created_at else None,
+                "metadata": log.metadata_
+            }
+            for log in logs
+        ]
+    }

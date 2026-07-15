@@ -14,6 +14,7 @@ import TransactionHistory from "./components/brand/TransactionHistory";
 import AdminPlaceholder from "./pages/admin/AdminPlaceholder";
 import AdminAdFormats from "./pages/admin/AdminAdFormats";
 import InventoryDashboard from "./pages/admin/InventoryDashboard";
+import Reports from "./pages/admin/Reports";
 import BrandFormats from "./pages/brand/BrandFormats";
 import { PERMISSIONS, BRAND_PERMISSIONS } from "./constants/permissions";
 
@@ -102,7 +103,7 @@ function App() {
             path="reports"
             element={
               <ProtectedRoute permission={PERMISSIONS.VIEW_REPORTS}>
-                <AdminPlaceholder />
+                <Reports />
               </ProtectedRoute>
             }
           />

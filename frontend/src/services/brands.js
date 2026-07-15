@@ -25,9 +25,13 @@ export const updateBrandStatus = (id, is_active) => {
 };
 
 export const resetBrandPassword = (id, password) => {
-  return API.put(`/admin/brands/${id}`, { password });
+  return API.patch(`/admin/brands/${id}/reset-password`, { password });
 };
 
 export const updateBrandCredits = (id, action, amount) => {
   return API.patch(`/admin/brands/${id}/credits`, { action, amount });
+};
+
+export const fetchBrandHistory = (id) => {
+  return API.get(`/admin/brands/${id}/history`);
 };

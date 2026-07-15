@@ -13,6 +13,11 @@
   border: 1px solid rgba(255,255,255,0.1);
   background: rgba(255,255,255,0.06); color: #fff;
   padding: 0 14px 0 42px; outline: none; font-family: 'Inter', sans-serif;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.apkg-search input:focus {
+  border-color: rgba(14,165,233,0.5);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.12);
 }
 .apkg-search input::placeholder { color: rgba(255,255,255,0.3); }
 .apkg-search-icon {
@@ -26,22 +31,25 @@
   padding: 0 14px; outline: none; font-family: 'Inter', sans-serif;
   font-size: 13px; cursor: pointer;
 }
-.apkg-filter option { background: #1e1550; }
+.apkg-filter option { background: #090e1a; }
 .apkg-retry {
   display: inline-flex; align-items: center; gap: 6px;
 }
 .apkg-btn {
   height: 42px; padding: 0 18px; border: none; border-radius: 12px;
-  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
   color: white; font-weight: 600; cursor: pointer;
   display: flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif;
+  transition: opacity 0.15s;
 }
+.apkg-btn:hover { opacity: 0.9; }
 .apkg-table-wrap {
-  background: rgba(20, 25, 40, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
   overflow-x: auto;
   overflow-y: hidden;
+  backdrop-filter: blur(18px);
 }
 
 .apkg-table {
@@ -59,7 +67,7 @@
   transition: color 0.15s;
 }
 .apkg-table th.apkg-sortable:hover { color: rgba(255,255,255,0.7); }
-.apkg-table th.apkg-sorted { color: #c4b5fd; }
+.apkg-table th.apkg-sorted { color: #7dd3fc; }
 .apkg-col-name { width: 30%; }
 .apkg-col-price { width: 15%; }
 .apkg-col-credits { width: 15%; }
@@ -133,6 +141,7 @@
   border: 1px solid rgba(255,255,255,0.1);
   color: rgba(255,255,255,0.7); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s;
 }
 .apkg-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .apkg-page-btn:not(:disabled):hover { background: rgba(255,255,255,0.12); color: #fff; }

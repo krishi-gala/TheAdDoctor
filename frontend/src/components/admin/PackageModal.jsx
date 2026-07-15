@@ -9,7 +9,7 @@ const EMPTY_FORM = {
   validity_days: 30,
   description: "",
   is_active: true,
-};
+}; 
 
 export default function PackageModal({ open, mode, packageData, onClose, onSave, saving }) {
   const [form, setForm] = useState(EMPTY_FORM);
@@ -34,7 +34,7 @@ export default function PackageModal({ open, mode, packageData, onClose, onSave,
   }, [open, mode, packageData]);
 
   if (!open) return null;
-
+ 
   const validate = () => {
     const next = {};
 
@@ -199,7 +199,7 @@ export default function PackageModal({ open, mode, packageData, onClose, onSave,
             </div>
           </form>
         </div>
-      </div>
+       </div>
     
   );
 }

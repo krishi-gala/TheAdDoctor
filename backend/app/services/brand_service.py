@@ -5,6 +5,9 @@ from sqlalchemy import asc, desc, or_
 from sqlalchemy.orm import Session , joinedload
 
 from app.models.user import User
+from app.models.campaign_booking import CampaignBooking
+from app.models.transaction import Transaction
+from app.models.package import Package
 
 SORTABLE_FIELDS = {
     "company_name": User.company_name,
@@ -69,9 +72,18 @@ def get_package_name(user: User) -> str:
 
 def serialize_brand_list(user: User) -> dict:
     wallet = user.wallet
-    remaining_credits = 0
+    is_expired = False
+    remaining_credits = None
+
     if wallet:
-        remaining_credits = wallet.total_credits - (wallet.used_credits or 0)
+        if wallet.package_expiry:
+            expiry = wallet.package_expiry.replace(tzinfo=None)
+            is_expired = expiry < datetime.utcnow()
+        else:
+            is_expired = True
+
+        if not is_expired:
+            remaining_credits = wallet.total_credits - (wallet.used_credits or 0)
 
     return {
         "user_id": user.user_id,
@@ -90,7 +102,32 @@ def serialize_brand_list(user: User) -> dict:
     }
 
 
-def serialize_brand_detail(user: User) -> dict:
+def serialize_brand_detail(db: Session, user: User) -> dict:
+    wallet = user.wallet
+    package_expiry = None
+    is_expired = False
+
+    if wallet and wallet.package_expiry:
+        package_expiry = wallet.package_expiry.isoformat()
+        is_expired = wallet.package_expiry.replace(tzinfo=None) < datetime.utcnow()
+
+    wallet_balance = None
+    if wallet and not is_expired:
+        wallet_balance = f"{wallet.total_credits - (wallet.used_credits or 0)} Credits"
+
+    purchased_pkgs_rows = db.query(Package.package_name).join(
+        Transaction, Transaction.package_id == Package.package_id
+    ).filter(
+        Transaction.brand_id == user.user_id,
+        Transaction.payment_status.in_(["completed", "success"]),
+        Transaction.expiry_date > datetime.utcnow()
+    ).distinct().all()
+    purchased_packages = [r[0] for r in purchased_pkgs_rows]
+
+    campaign_count = db.query(CampaignBooking).filter(
+        CampaignBooking.brand_id == user.user_id
+    ).count()
+
     return {
         "user_id": user.user_id,
         "company_name": user.company_name,
@@ -98,13 +135,15 @@ def serialize_brand_detail(user: User) -> dict:
         "phone_number": user.phone_number,
         "business_type": user.business_type,
         "package": get_package_name(user),
+        "package_expiry": package_expiry,
+        "is_package_expired": is_expired,
         "status": "active" if user.is_active else "inactive",
         "is_active": user.is_active,
         "created_at": user.created_at.isoformat() if user.created_at else None,
         "updated_at": user.updated_at.isoformat() if user.updated_at else None,
-        "wallet_balance": None,
-        "purchased_packages": [],
-        "campaign_count": 0,
+        "wallet_balance": wallet_balance,
+        "purchased_packages": purchased_packages,
+        "campaign_count": campaign_count,
     }
 
 

@@ -5,8 +5,12 @@ import {
   Package,
   Megaphone,
   Loader2,
+  CalendarClock,
+  AlertTriangle,
+  History,
+  Activity,
 } from "lucide-react";
-import { fetchBrandById } from "../../services/brands";
+import { fetchBrandById, fetchBrandHistory } from "../../services/brands";
 import "./BrandDetailsDrawer.css";
 
 function formatDate(value) {
@@ -25,6 +29,7 @@ function DetailRow({ label, value }) {
 
 export default function BrandDetailsDrawer({ open, brandId, onClose }) {
   const [detail, setDetail] = useState(null);
+  const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -37,8 +42,14 @@ export default function BrandDetailsDrawer({ open, brandId, onClose }) {
       setError("");
       setDetail(null);
       try {
-        const res = await fetchBrandById(brandId);
-        if (!cancelled) setDetail(res.data.brand);
+        const [res, histRes] = await Promise.all([
+          fetchBrandById(brandId),
+          fetchBrandHistory(brandId)
+        ]);
+        if (!cancelled) {
+          setDetail(res.data.brand);
+          setHistory(histRes.data.history || []);
+        }
       } catch (err) {
         if (!cancelled) {
           setError(err.response?.data?.detail || "Failed to load brand details");
@@ -88,6 +99,38 @@ export default function BrandDetailsDrawer({ open, brandId, onClose }) {
               <DetailRow label="Phone" value={detail.phone_number} />
               <DetailRow label="Business type" value={detail.business_type} />
               <DetailRow label="Package" value={detail.package} />
+
+              {/* Package expiry row */}
+              {(() => {
+                if (!detail.package_expiry) return null;
+                const expiry = new Date(detail.package_expiry);
+                const now = new Date();
+                const diffDays = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                const expired = detail.is_package_expired;
+                const expiringSoon = !expired && diffDays <= 7;
+                return (
+                  <div className="bd-row">
+                    <span className="bd-label">
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <CalendarClock size={13} />
+                        Package Expiry
+                      </span>
+                    </span>
+                    <span className="bd-value" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                      {formatDate(detail.package_expiry)}
+                      {expired && (
+                        <span className="bd-expiry-badge bd-expiry-badge--expired">Expired</span>
+                      )}
+                      {expiringSoon && (
+                        <span className="bd-expiry-badge bd-expiry-badge--soon">
+                          <AlertTriangle size={11} /> {diffDays}d left
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                );
+              })()}
+
               <div className="bd-row">
                 <span className="bd-label">Status</span>
                 <span
@@ -101,29 +144,45 @@ export default function BrandDetailsDrawer({ open, brandId, onClose }) {
               <DetailRow label="Created" value={formatDate(detail.created_at)} />
               <DetailRow label="Updated" value={formatDate(detail.updated_at)} />
 
-              <div className="bd-section">Future modules</div>
+              <div className="bd-section">Activity Summary</div>
               <div className="bd-future">
                 <Wallet size={20} />
                 <div>
                   <strong>Wallet balance</strong>
-                  {detail.wallet_balance ?? "Coming soon"}
+                  {detail.wallet_balance ?? "—"}
                 </div>
               </div>
               <div className="bd-future">
                 <Package size={20} />
                 <div>
                   <strong>Purchased packages</strong>
-                  {(detail.purchased_packages?.length
+                  {detail.purchased_packages?.length
                     ? detail.purchased_packages.join(", ")
-                    : null) ?? "Coming soon"}
+                    : "None"}
                 </div>
               </div>
               <div className="bd-future">
                 <Megaphone size={20} />
                 <div>
                   <strong>Campaign count</strong>
-                  {detail.campaign_count ?? 0} (placeholder)
+                  {detail.campaign_count ?? 0}
                 </div>
+              </div>
+              <div className="bd-section">History & Audit Logs</div>
+              <div className="bd-history-list">
+                {history.length > 0 ? (
+                  history.map((log) => (
+                    <div key={log.audit_id} className={`bd-history-item severity-${log.severity}`}>
+                      <div className="bd-history-dot"></div>
+                      <div className="bd-history-content">
+                        <div className="bd-history-desc">{log.description || log.action_type}</div>
+                        <div className="bd-history-time">{formatDate(log.created_at)}</div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="bd-history-empty">No history available for this brand.</div>
+                )}
               </div>
             </>
           ) : null}

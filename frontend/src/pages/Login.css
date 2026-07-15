@@ -1,6 +1,325 @@
-/* Login page additional styles - icon sizing (prefix: ad-) */
+/* =========================
+   LOGIN PAGE STYLES
+   ========================= */
 
-.ad-portal-tag--icon { font-size: 11px; }
-.ad-chk-icon { font-size: 10px; color: #fff; }
-.ad-btn-sso-icon { font-size: 15px; color: #a5b4fc; }
-.ad-error-msg { color: #f87171; font-size: 13px; margin-bottom: 14px; }
+/* Global reset to prevent white patches */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0b0f19;
+}
+
+.ad-root * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.ad-root {
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  /* Brand Dashboard Theme Background */
+  background-color: #0b0f19;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+  display: flex;
+  position: relative;
+}
+
+/* Subtle floating glow elements */
+.ad-orb1 {
+  position: absolute; width: 600px; height: 600px; border-radius: 50%;
+  background: #3b82f6; top: -160px; left: -120px;
+  opacity: 0.15; filter: blur(120px); pointer-events: none;
+}
+.ad-orb2 {
+  position: absolute; width: 400px; height: 400px; border-radius: 50%;
+  background: #10b981; bottom: -100px; left: 20%;
+  opacity: 0.1; filter: blur(100px); pointer-events: none;
+}
+.ad-orb3 {
+  position: absolute; width: 360px; height: 360px; border-radius: 50%;
+  background: #6366f1; top: 10%; right: 20%;
+  opacity: 0.15; filter: blur(100px); pointer-events: none;
+}
+
+/* =========================
+   LAYOUT
+   ========================= */
+
+.ad-left {
+  flex: 1;
+  width: 50%;
+  padding: 48px 60px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+}
+
+.ad-right {
+  flex: 1;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 60px;
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================
+   LEFT SIDE BRANDING
+   ========================= */
+
+.ad-logo-row { display: flex; align-items: center; gap: 10px; }
+.ad-logo-mark {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 13px; color: #fff;
+}
+.ad-logo-text { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+
+.ad-hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 24px 0; max-width: 480px; margin: 0 auto 0 0; width: 100%; }
+
+.ad-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 20px;
+  background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);
+  font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+  color: #60a5fa; margin-bottom: 24px; width: fit-content;
+}
+.ad-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+
+.ad-h1 { font-size: 40px; font-weight: 800; line-height: 1.15; color: #fff; margin-bottom: 16px; letter-spacing: -0.02em; }
+.ad-h1-grad {
+  background: linear-gradient(90deg, #60a5fa, #3b82f6, #818cf8);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.ad-desc { font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.6; max-width: 440px; margin-bottom: 32px; }
+
+.ad-foot { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+/* Feature Cards (Dashboard Style) */
+.ad-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ad-feature-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(20, 25, 40, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.ad-feature-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(59, 130, 246, 0.2);
+  transform: translateX(4px);
+}
+
+.ad-feature-icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  font-size: 20px;
+}
+
+.ad-feature-content {
+  flex: 1;
+}
+
+.ad-feature-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.ad-feature-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #888;
+}
+
+/* =========================
+   RIGHT SIDE LOGIN CARD
+   ========================= */
+
+.ad-card {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(20, 25, 40, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 40px;
+  backdrop-filter: blur(24px); 
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+}
+
+.ad-card-bar {
+  height: 4px; border-radius: 999px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  margin-bottom: 24px;
+  width: 48px;
+}
+
+.ad-portal-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  color: #aaa; margin-bottom: 16px;
+}
+.ad-portal-tag--icon { font-size: 12px; }
+
+.ad-wlc { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: -0.01em; }
+.ad-wlc-sub { font-size: 14px; color: #888; margin-bottom: 28px; }
+
+/* Inputs */
+.ad-lbl {
+  font-size: 12px; font-weight: 500;
+  color: #aaa; margin-bottom: 8px; display: block;
+}
+
+.ad-fw { position: relative; margin-bottom: 20px; }
+.ad-fw-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 18px; color: #666; pointer-events: none;
+  transition: color 0.2s;
+}
+.ad-input {
+  width: 100%; height: 44px; border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 14px; font-family: 'Inter', sans-serif;
+  color: #fff; padding: 0 14px 0 44px; outline: none;
+  transition: all 0.2s ease;
+}
+.ad-input:focus { 
+  border-color: rgba(59, 130, 246, 0.5); 
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15); 
+}
+.ad-input:focus ~ .ad-fw-icon, .ad-input:not(:placeholder-shown) ~ .ad-fw-icon {
+  color: #3b82f6;
+}
+.ad-input::placeholder { color: #555; }
+
+.ad-eye {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: #666; padding: 0; display: flex; font-size: 18px;
+  transition: color 0.2s;
+}
+.ad-eye:hover { color: #aaa; }
+
+.ad-error-msg { 
+  color: #ef4444; font-size: 13px; margin-top: 6px; 
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* Helpers */
+.ad-helpers { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+
+.ad-remb {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  font-size: 13px; color: #888;
+  background: none; border: none; font-family: inherit; padding: 0;
+  transition: color 0.2s;
+}
+.ad-remb:hover { color: #ccc; }
+
+.ad-chk {
+  width: 18px; height: 18px; border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.2s;
+}
+.ad-chk-on { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+.ad-chk-icon { font-size: 12px; color: #fff; }
+
+.ad-forgot { font-size: 13px; color: #60a5fa; text-decoration: none; font-weight: 500; transition: color 0.2s; }
+.ad-forgot:hover { color: #93c5fd; }
+
+/* Sign in button */
+.ad-btn-main {
+  width: 100%; height: 44px; border-radius: 8px; border: none;
+  background: #3b82f6;
+  color: #fff; font-family: inherit; font-weight: 600; font-size: 14px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 8px; margin-bottom: 20px; 
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+.ad-btn-main:hover:not(:disabled) { 
+  background: #2563eb; 
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+}
+.ad-btn-main:active:not(:disabled) { 
+  transform: translateY(1px); 
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+.ad-btn-success { 
+  background: #10b981 !important; 
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
+}
+.ad-btn-main:disabled { 
+  opacity: 0.7; cursor: not-allowed; 
+}
+
+/* Divider */
+.ad-divrow { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.ad-divline { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.05); }
+
+/* Animation */
+@keyframes ad-spin { to { transform: rotate(360deg); } }
+.ad-spin { animation: ad-spin 0.7s linear infinite; display: inline-block; }
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1024px) {
+  .ad-left, .ad-right { padding: 40px; }
+  .ad-h1 { font-size: 32px; }
+  .ad-desc { font-size: 14px; }
+  .ad-card { padding: 32px; }
+}
+
+@media (max-width: 768px) {
+  .ad-root { flex-direction: column; overflow-y: auto; }
+  .ad-left { width: 100%; padding: 32px 24px; min-height: auto; flex: none; }
+  .ad-right { width: 100%; padding: 32px 24px; align-items: flex-start; }
+  .ad-hero { margin: 32px 0; max-width: 100%; }
+  .ad-card { max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .ad-feature-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .ad-h1 { font-size: 28px; }
+}

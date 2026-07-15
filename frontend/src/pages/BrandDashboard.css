@@ -152,6 +152,39 @@
   background: #dc2626;
 }
 
+/* ── Expiring-soon warning banner (amber) ───────────── */
+.brand-dashboard-expiry-warning {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  color: #fbbf24;
+}
+
+.brand-dashboard-expiry-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  background: rgba(245, 158, 11, 0.85);
+  color: #0f0f0f;
+  text-decoration: none;
+  transition: background 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.brand-dashboard-expiry-cta:hover {
+  background: #f59e0b;
+}
+
 .brand-dashboard-status-badge {
   font-size: 10px;
   padding: 3px 8px;

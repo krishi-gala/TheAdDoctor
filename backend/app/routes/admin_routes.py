@@ -12,9 +12,19 @@ router = APIRouter(
 )
 
 
+from app.services.search_service import global_search
+
 @router.get("/dashboard")
 def admin_dashboard(
     current_user: dict = Depends(permission_required(VIEW_DASHBOARD)),
     db: Session = Depends(get_db)
 ):
     return get_dashboard_stats(db)
+
+@router.get("/search")
+def search_global(
+    q: str,
+    current_user: dict = Depends(permission_required(VIEW_DASHBOARD)),
+    db: Session = Depends(get_db)
+):
+    return global_search(db, q)

@@ -1,7 +1,10 @@
-import { Bell, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import NotificationBell from "../common/NotificationBell";
 import "./Topbar.css";
 
 export default function Topbar() {
+  const navigate = useNavigate();
+
   return (
       <div className="tb-root">
           <div className="tb-left">
@@ -14,15 +17,8 @@ export default function Topbar() {
           </div>
 
         <div className="tb-right">
-          <div className="tb-search">
-            <Search size={14} />
-            <input placeholder="Search campaigns, brands…" />
-          </div>
-
-          <div className="tb-bell">
-            <Bell size={16} />
-            <span className="tb-bell-dot" />
-          </div>
+          
+          <NotificationBell />
 
           <div className="tb-avatar">
             <div className="tb-avatar-circle">Ad</div>

@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(15, 10, 40, 0.55);
+  background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(4px);
 }
 .bd-drawer {
@@ -13,9 +13,9 @@
   z-index: 101;
   width: 100%;
   max-width: 440px;
-  background: rgba(30, 20, 70, 0.96);
+  background: rgba(9, 14, 26, 0.98);
   border-left: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: -12px 0 48px rgba(0, 0, 0, 0.35);
+  box-shadow: -12px 0 48px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   animation: bd-slide 0.25s ease;
@@ -56,6 +56,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.15s;
+}
+.bd-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 .bd-body {
   flex: 1;
@@ -99,10 +104,12 @@
 .bd-status.active {
   background: rgba(34, 197, 94, 0.15);
   color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.25);
 }
 .bd-status.inactive {
   background: rgba(239, 68, 68, 0.15);
   color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
 }
 .bd-future {
   padding: 14px;
@@ -130,9 +137,100 @@
 .bd-error {
   color: #f87171;
 }
-.bd-loader-icon { animation: spin 1s linear infinite; margin: 0 auto 12px; display: block; }
-@keyframes spin {
+.bd-loader-icon { animation: bd-spin 1s linear infinite; margin: 0 auto 12px; display: block; }
+@keyframes bd-spin {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* ── Expiry badges ────────────────────────────────────────── */
+.bd-expiry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.bd-expiry-badge--expired {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.bd-expiry-badge--soon {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* ── History timeline ─────────────────────────────────────── */
+.bd-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+  position: relative;
+}
+.bd-history-list::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 0;
+  left: 5px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+}
+.bd-history-item {
+  display: flex;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+.bd-history-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(9, 14, 26, 0.98);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.severity-success .bd-history-dot {
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.3);
+}
+.severity-warning .bd-history-dot {
+  background: #fbbf24;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
+}
+.severity-info .bd-history-dot {
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+}
+.bd-history-content {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+.bd-history-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.4;
+}
+.bd-history-time {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
+}
+.bd-history-empty {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+  padding: 12px 0;
 }

@@ -5,8 +5,8 @@
 }
 
 .sc-card {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 20px;
   padding: 24px 22px;
   backdrop-filter: blur(20px);
@@ -18,7 +18,8 @@
 }
 
 .sc-card:hover {
-  background: rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
 }
 
 .sc-card-bar {
@@ -77,5 +78,5 @@
 }
 
 .sc-change-pos {
-  color: #5eead4;
+  color: #34d399;
 }

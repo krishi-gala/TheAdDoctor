@@ -113,7 +113,12 @@ def create_package(
             db,
             action_by=current_user["user_id"],
             action_type="package_created",
-            description=f"Created {package.package_name}"
+            description=f'Admin created package "{package.package_name}"',
+            target_type="package",
+            target_id=package.package_id,
+            metadata={"package_name": package.package_name},
+            severity="success",
+            is_notification=False
         )
 
         db.commit()
@@ -191,7 +196,12 @@ def update_package(
             db,
             action_by=current_user["user_id"],
             action_type="package_updated",
-            description=f"Updated {package.package_name}"
+            description=f'Admin updated package "{package.package_name}"',
+            target_type="package",
+            target_id=package.package_id,
+            metadata={"package_name": package.package_name},
+            severity="success",
+            is_notification=False
         )
 
         return {
@@ -247,10 +257,12 @@ def toggle_package_status(
         db,
         action_by=current_user["user_id"],
         action_type="package_status_changed",
-        description=(
-            f"{'Activated' if payload.is_active else 'Disabled'} "
-            f"{package.package_name}"
-        )
+        description=f'Admin {"activated" if payload.is_active else "disabled"} package "{package.package_name}"',
+        target_type="package",
+        target_id=package.package_id,
+        metadata={"package_name": package.package_name, "is_active": payload.is_active},
+        severity="info",
+        is_notification=False
     )
 
     return {

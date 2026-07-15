@@ -101,7 +101,7 @@ export function useBrandTable({ onBrandsChange } = {}) {
   useEffect(() => {
     if (!menuBrandId) return;
     const handleOutsideClick = (e) => {
-      if (!e.target.closest(".bm-more-wrap")) {
+      if (!e.target.closest(".bt-more-wrap")) {
         setMenuBrandId(null);
       }
     };

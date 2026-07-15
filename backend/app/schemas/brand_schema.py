@@ -53,3 +53,6 @@ class BrandStatusPatch(BaseModel):
 class BrandCreditsUpdate(BaseModel):
     action: Literal["add", "deduct"]
     amount: int = Field(..., gt=0)
+
+class BrandPasswordReset(BaseModel):
+    password: str = Field(..., min_length=6, max_length=128)

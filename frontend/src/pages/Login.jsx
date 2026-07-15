@@ -6,41 +6,6 @@ import "./Login.css";
 
 
 
-const stats = [
-  {
-    icon: "ti-bolt",
-    value: "+240",
-    label: "Campaigns Optimised",
-    trend: "↑ Live",
-    iconBg: "rgba(99,102,241,0.22)",
-    iconColor: "#a5b4fc",
-    tagBg: "rgba(99,102,241,0.18)",
-    tagColor: "#a5b4fc",
-    tagBorder: "rgba(99,102,241,0.3)",
-  },
-  {
-    icon: "ti-trending-up",
-    value: "89%",
-    label: "Better Engagement Rate",
-    trend: "↑ Avg",
-    iconBg: "rgba(167,139,250,0.2)",
-    iconColor: "#c4b5fd",
-    tagBg: "rgba(167,139,250,0.15)",
-    tagColor: "#c4b5fd",
-    tagBorder: "rgba(167,139,250,0.3)",
-  },
-  {
-    icon: "ti-currency-rupee",
-    value: "₹12Cr+",
-    label: "Ad Spend Managed",
-    trend: "↑ YTD",
-    iconBg: "rgba(45,212,191,0.15)",
-    iconColor: "#5eead4",
-    tagBg: "rgba(45,212,191,0.12)",
-    tagColor: "#5eead4",
-    tagBorder: "rgba(45,212,191,0.25)",
-  },
-];
 
 export default function Login() {
 
@@ -111,9 +76,9 @@ export default function Login() {
           </div>
 
           <div className="ad-h1">
-            Smarter Campaign
+            Plan. Book. Approve. 
             <br />
-            <span className="ad-h1-grad">Decisions.</span>
+            <span className="ad-h1-grad">Deliver.</span>
           </div>
 
           <p className="ad-desc">
@@ -121,30 +86,74 @@ export default function Login() {
             scale cross-network spend using unified infrastructure.
           </p>
 
-          {stats.map((s) => (
-            <div className="ad-stat" key={s.label}>
-              <div
-                className="ad-stat-ico"
-                style={{ background: s.iconBg, color: s.iconColor }}
-              >
-                <i className={`ti ${s.icon}`} aria-hidden="true" />
-              </div>
-              <div>
-                <div className="ad-stat-val">{s.value}</div>
-                <div className="ad-stat-lbl">{s.label}</div>
-              </div>
-              <span
-                className="ad-tag"
-                style={{
-                  background: s.tagBg,
-                  color: s.tagColor,
-                  border: `1px solid ${s.tagBorder}`,
-                }}
-              >
-                {s.trend}
-              </span>
-            </div>
-          ))}
+          
+          <div className="ad-feature-list">
+
+  <div className="ad-feature-card">
+    <div className="ad-feature-icon">
+      <i className="ti ti-speakerphone" />
+    </div>
+
+    <div className="ad-feature-content">
+      <div className="ad-feature-title">
+        Campaign Management
+      </div>
+
+      <div className="ad-feature-desc">
+        Book, manage and track advertising campaigns from a single platform.
+      </div>
+    </div>
+  </div>
+
+  <div className="ad-feature-card">
+    <div className="ad-feature-icon">
+      <i className="ti ti-package" />
+    </div>
+
+    <div className="ad-feature-content">
+      <div className="ad-feature-title">
+        Credit-Based Packages
+      </div>
+
+      <div className="ad-feature-desc">
+        Purchase flexible credit packages and utilize them across ad formats.
+      </div>
+    </div>
+  </div>
+
+  <div className="ad-feature-card">
+    <div className="ad-feature-icon">
+      <i className="ti ti-target-arrow" />
+    </div>
+
+    <div className="ad-feature-content">
+      <div className="ad-feature-title">
+        Smart Recommendations
+      </div>
+
+      <div className="ad-feature-desc">
+        Receive optimized inventory and timing suggestions powered by analytics.
+      </div>
+    </div>
+  </div>
+
+  <div className="ad-feature-card">
+    <div className="ad-feature-icon">
+      <i className="ti ti-chart-bar" />
+    </div>
+
+    <div className="ad-feature-content">
+      <div className="ad-feature-title">
+        Operations Dashboard
+      </div>
+
+      <div className="ad-feature-desc">
+        Monitor approvals, inventory allocation, package usage and reporting.
+      </div>
+    </div>
+  </div>
+
+</div>
         </div>
 
         <div className="ad-foot">© 2026 The Ad Doctor · All rights reserved</div>
@@ -157,7 +166,7 @@ export default function Login() {
 
           <div className="ad-portal-tag">
             <i className="ti ti-building ad-portal-tag--icon" aria-hidden="true" />
-            Admin Panel
+            login 
           </div>
 
           <div className="ad-wlc">Welcome back</div>
@@ -253,18 +262,10 @@ export default function Login() {
 
           <div className="ad-divrow">
             <div className="ad-divline" />
-            <span className="ad-divtxt">or</span>
             <div className="ad-divline" />
           </div>
 
-          <button className="ad-btn-sso" type="button">
-            <i className="ti ti-building ad-btn-sso-icon" aria-hidden="true" />
-            Continue with Enterprise SSO
-          </button>
-
-          <div className="ad-card-foot">
-            Need access? <a href="#">Contact support</a>
-          </div>
+          
         </div>
       </div>
     </div>

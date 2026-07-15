@@ -24,10 +24,11 @@
 }
 
 .inv-table-container {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
+  backdrop-filter: blur(16px);
 }
 
 .inv-table {
@@ -37,16 +38,17 @@
 }
 
 .inv-th {
-  padding: 16px;
+  padding: 18px 20px;
   font-size: 12px;
   font-weight: 600;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.45);
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
 .inv-td {
-  padding: 16px;
+  padding: 16px 20px;
   font-size: 14px;
   color: rgba(255,255,255,0.85);
   border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -61,7 +63,7 @@
 }
 
 .inv-tr:hover {
-  background: rgba(255,255,255,0.02);
+  background: rgba(255,255,255,0.03);
 }
 
 .inv-chip {

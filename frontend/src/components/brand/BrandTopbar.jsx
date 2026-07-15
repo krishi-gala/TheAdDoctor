@@ -1,4 +1,5 @@
 import { Bell } from "lucide-react";
+import NotificationBell from "../common/NotificationBell";
 import { getRole } from "../../services/auth";
 import "./BrandTopbar.css";
 
@@ -24,9 +25,7 @@ export default function BrandTopbar({ pageTitle = "Dashboard", walletState }) {
             </div>
           )}
 
-          <div className="btb-bell">
-            <Bell size={16} />
-          </div>
+          <NotificationBell />
 
           <div className="btb-avatar">
             <div className="btb-avatar-circle">Br</div>
