@@ -3,6 +3,7 @@ import { Lock, AlertTriangle } from "lucide-react";
 import NotificationBell from "../common/NotificationBell";
 import { getRole, changePassword } from "../../services/auth";
 import { fetchBrandAdFormats } from "../../services/adFormats";
+import { isValidPassword, PASSWORD_REQUIREMENT_TEXT } from "../../constants/password";
 import "./BrandTopbar.css";
 
 const LOW_INVENTORY_THRESHOLD = 2;
@@ -54,8 +55,8 @@ export default function BrandTopbar({ pageTitle = "Dashboard", walletState }) {
       return;
     }
 
-    if (newPassword.length < 6) {
-      setPasswordError("Password must be at least 6 characters.");
+    if (!isValidPassword(newPassword)) {
+      setPasswordError(`Password must be ${PASSWORD_REQUIREMENT_TEXT.toLowerCase()}.`);
       return;
     }
 
@@ -158,6 +159,7 @@ export default function BrandTopbar({ pageTitle = "Dashboard", walletState }) {
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
                 />
+                <span className="pwd-modal-help">{PASSWORD_REQUIREMENT_TEXT}</span>
               </div>
               <div className="pwd-modal-form-group">
                 <label>Confirm New Password</label>

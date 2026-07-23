@@ -265,6 +265,15 @@ body {
 .ad-forgot { font-size: 13px; color: #60a5fa; text-decoration: none; font-weight: 500; transition: color 0.2s; }
 .ad-forgot:hover { color: #93c5fd; }
 
+.ad-forgot { cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
+
+.ad-modal-backdrop { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(2, 6, 23, 0.72); backdrop-filter: blur(8px); }
+.ad-modal { position: relative; width: min(100%, 440px); padding: 36px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; background: #141928; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5); }
+.ad-modal-close { position: absolute; top: 18px; right: 18px; border: 0; background: transparent; color: #888; cursor: pointer; font-size: 20px; }
+.ad-modal-close:hover { color: #fff; }
+.ad-modal-submit { margin-top: 20px; margin-bottom: 0; }
+.ad-forgot-success { padding: 14px; border: 1px solid rgba(52, 211, 153, 0.25); border-radius: 8px; color: #34d399; background: rgba(52, 211, 153, 0.08); line-height: 1.5; }
+
 /* Sign in button */
 .ad-btn-main {
   width: 100%; height: 44px; border-radius: 8px; border: none;

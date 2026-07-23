@@ -3,13 +3,41 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app.schemas.auth_schema import LoginRequest, ChangePasswordRequest
+from app.schemas.password_reset_schema import ForgotPasswordRequest, ResetPasswordRequest
 from app.core.security import create_access_token, get_current_user
-from app.core.password import verify_password, hash_password
+from app.core.password import verify_password, set_password
+from app.services.password_reset_service import (
+    RESET_MESSAGE,
+    get_valid_reset_token,
+    request_password_reset,
+    reset_password,
+)
 from app.services.permission_service import resolve_user_permissions
 from app.core.database import get_db
 from app.models.user import User
 
 router = APIRouter()
+
+
+@router.post("/auth/forgot-password")
+def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db)):
+    try:
+        request_password_reset(db, request.email)
+    except Exception:
+        db.rollback()
+    return {"message": RESET_MESSAGE}
+
+
+@router.get("/auth/reset-password/{token}")
+def validate_reset_password_token(token: str, db: Session = Depends(get_db)):
+    get_valid_reset_token(db, token)
+    return {"valid": True}
+
+
+@router.post("/auth/reset-password")
+def complete_reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db)):
+    reset_password(db, request.token, request.new_password)
+    return {"message": "Password reset successfully"}
 
 
 @router.post("/login")
@@ -95,7 +123,7 @@ def change_password(
     if not verify_password(request.current_password, user.password_hash):
         raise HTTPException(status_code=400, detail="Invalid current password")
         
-    user.password_hash = hash_password(request.new_password)
+    set_password(user, request.new_password)
     db.commit()
     
     return {"message": "Password changed successfully"}

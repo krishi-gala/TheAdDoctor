@@ -1,5 +1,7 @@
 import bcrypt
 
+PASSWORD_MIN_LENGTH = 8
+
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(
@@ -18,3 +20,7 @@ def verify_password(plain_password: str, stored_password: str) -> bool:
         )
     except Exception:
         return False
+
+
+def set_password(user, new_password: str) -> None:
+    user.password_hash = hash_password(new_password)

@@ -3,6 +3,8 @@ from typing import Optional, Literal
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
+from app.core.password import PASSWORD_MIN_LENGTH
+
 PHONE_PATTERN = re.compile(r"^[\d\s+\-()]{7,20}$")
 
 
@@ -20,7 +22,7 @@ def validate_phone_optional(value: Optional[str]) -> Optional[str]:
 class BrandCreate(BaseModel):
     company_name: str = Field(..., min_length=2, max_length=255)
     email: EmailStr
-    password: str = Field(..., min_length=6, max_length=128)
+    password: str = Field(..., min_length=PASSWORD_MIN_LENGTH, max_length=128)
     phone_number: Optional[str] = Field(None, max_length=20)
     business_type: Optional[str] = Field(None, max_length=100)
     package: Optional[str] = Field(None, max_length=100)
@@ -35,7 +37,7 @@ class BrandCreate(BaseModel):
 class BrandUpdate(BaseModel):
     company_name: Optional[str] = Field(None, min_length=2, max_length=255)
     email: Optional[EmailStr] = None
-    password: Optional[str] = Field(None, min_length=6, max_length=128)
+    password: Optional[str] = Field(None, min_length=PASSWORD_MIN_LENGTH, max_length=128)
     phone_number: Optional[str] = Field(None, max_length=20)
     business_type: Optional[str] = Field(None, max_length=100)
     package: Optional[str] = Field(None, max_length=100)
@@ -55,4 +57,4 @@ class BrandCreditsUpdate(BaseModel):
     amount: int = Field(..., gt=0)
 
 class BrandPasswordReset(BaseModel):
-    password: str = Field(..., min_length=6, max_length=128)
+    password: str = Field(..., min_length=PASSWORD_MIN_LENGTH, max_length=128)

@@ -17,6 +17,24 @@ export default function Login() {
   const [showPwd, setShowPwd] = useState(false);
   const [remember, setRemember] = useState(false);
   const [status, setStatus] = useState("idle"); // "idle" | "loading" | "success"
+  const [showForgotModal, setShowForgotModal] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotStatus, setForgotStatus] = useState("idle");
+  const [forgotError, setForgotError] = useState("");
+
+  const handleForgotPassword = async (event) => {
+    event.preventDefault();
+    setForgotError("");
+    setForgotStatus("loading");
+
+    try {
+      await API.post("/auth/forgot-password", { email: forgotEmail });
+      setForgotStatus("success");
+    } catch (err) {
+      setForgotStatus("idle");
+      setForgotError(err.response?.data?.detail || "Unable to send reset email");
+    }
+  };
 
   const handleLogin = async () => {
     if (status !== "idle") return;
@@ -232,7 +250,18 @@ export default function Login() {
               </div>
               Remember device
             </button>
-            <a className="ad-forgot" href="#">Forgot password?</a>
+            <button
+              className="ad-forgot"
+              type="button"
+              onClick={() => {
+                setForgotEmail(email);
+                setForgotStatus("idle");
+                setForgotError("");
+                setShowForgotModal(true);
+              }}
+            >
+              Forgot password?
+            </button>
           </div>
 
           {/* Sign in button */}
@@ -268,6 +297,53 @@ export default function Login() {
           
         </div>
       </div>
+
+      {showForgotModal && (
+        <div className="ad-modal-backdrop" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) setShowForgotModal(false);
+        }}>
+          <div className="ad-modal" role="dialog" aria-modal="true" aria-labelledby="forgot-password-title">
+            <button
+              className="ad-modal-close"
+              type="button"
+              aria-label="Close forgot password dialog"
+              onClick={() => setShowForgotModal(false)}
+            >
+              <i className="ti ti-x" aria-hidden="true" />
+            </button>
+            <div className="ad-portal-tag">Password recovery</div>
+            <div className="ad-wlc" id="forgot-password-title">Forgot your password?</div>
+            <div className="ad-wlc-sub">Enter your registered email and we will send a secure reset link.</div>
+
+            {forgotStatus === "success" ? (
+              <div className="ad-forgot-success">
+                If an account exists for this email, a reset link has been sent.
+              </div>
+            ) : (
+              <form onSubmit={handleForgotPassword}>
+                <label className="ad-lbl" htmlFor="forgot-email">Email address</label>
+                <div className="ad-fw">
+                  <i className="ti ti-mail ad-fw-icon" aria-hidden="true" />
+                  <input
+                    id="forgot-email"
+                    className="ad-input"
+                    type="email"
+                    required
+                    placeholder="name@company.com"
+                    value={forgotEmail}
+                    onChange={(event) => setForgotEmail(event.target.value)}
+                  />
+                </div>
+                {forgotError && <div className="ad-error-msg">{forgotError}</div>}
+                <button className="ad-btn-main ad-modal-submit" type="submit" disabled={forgotStatus === "loading"}>
+                  <i className={`ti ${forgotStatus === "loading" ? "ti-loader-2 ad-spin" : "ti-send"}`} aria-hidden="true" />
+                  {forgotStatus === "loading" ? "Sending..." : "Send reset link"}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

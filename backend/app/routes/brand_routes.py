@@ -194,8 +194,9 @@ def update_brand(
         if "business_type" in data:
             brand.business_type = data["business_type"]
 
-        # Package update (REAL source = wallet)
-        if "package" in data:
+        # Package update (REAL source = wallet). A missing, blank, or display-only
+        # expired value means the admin did not request a package change.
+        if data.get("package") not in (None, "", "Expired"):
             package_name = data["package"]
 
             package = (

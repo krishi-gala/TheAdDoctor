@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { fetchPackageOptions } from "../../services/packages";
+import { isValidPassword, PASSWORD_REQUIREMENT_TEXT } from "../../constants/password";
 import "./BrandModal.css";
 
 const BUSINESS_TYPES = [
@@ -95,8 +96,8 @@ export default function BrandModal({ open, mode, brand, onClose, onSave, saving 
 
     if (mode === "add" && !form.password) {
       next.password = "Password is required";
-    } else if (form.password && form.password.length < 6) {
-      next.password = "Password must be at least 6 characters";
+    } else if (form.password && !isValidPassword(form.password)) {
+      next.password = `Password must be ${PASSWORD_REQUIREMENT_TEXT.toLowerCase()}.`;
     }
 
     if (form.phone_number && !/^[\d\s+\-()]{7,20}$/.test(form.phone_number)) {
@@ -123,9 +124,13 @@ export default function BrandModal({ open, mode, brand, onClose, onSave, saving 
       email: form.email.trim(),
       phone_number: form.phone_number.trim() || null,
       business_type: form.business_type || null,
-      package: form.package || null,
       is_active: form.is_active,
     };
+
+    const packageChanged = mode === "add" || form.package !== (brand?.package || "");
+    if (packageChanged && form.package && form.package !== "Expired") {
+      payload.package = form.package;
+    }
 
     if (form.password) {
       payload.password = form.password;
@@ -189,7 +194,7 @@ export default function BrandModal({ open, mode, brand, onClose, onSave, saving 
                 type="password"
                 value={form.password}
                 onChange={(e) => handleChange("password", e.target.value)}
-                placeholder={mode === "edit" ? "••••••••" : "Min. 6 characters"}
+                placeholder={mode === "edit" ? "••••••••" : PASSWORD_REQUIREMENT_TEXT}
               />
               {errors.password && (
                 <span className="bm-error">{errors.password}</span>

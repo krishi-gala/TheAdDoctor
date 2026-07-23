@@ -192,6 +192,13 @@
   border-color: #38bdf8;
 }
 
+.pwd-modal-help {
+  display: block;
+  margin-top: 6px;
+  color: rgba(255,255,255,0.45);
+  font-size: 12px;
+}
+
 .pwd-modal-actions {
   display: flex;
   justify-content: flex-end;

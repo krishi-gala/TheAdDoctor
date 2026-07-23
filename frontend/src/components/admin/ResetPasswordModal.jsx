@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { isValidPassword, PASSWORD_REQUIREMENT_TEXT } from "../../constants/password";
 import "./ResetPasswordModal.css";
 
 export default function ResetPasswordModal({
@@ -27,8 +28,8 @@ export default function ResetPasswordModal({
       setError("Password is required");
       return false;
     }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (!isValidPassword(password)) {
+      setError(`Password must be ${PASSWORD_REQUIREMENT_TEXT.toLowerCase()}.`);
       return false;
     }
     if (password !== confirm) {
@@ -66,7 +67,7 @@ export default function ResetPasswordModal({
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Min. 6 characters"
+                placeholder={PASSWORD_REQUIREMENT_TEXT}
               />
             </div>
             <div className="rp-field">
