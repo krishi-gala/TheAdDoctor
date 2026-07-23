@@ -31,27 +31,7 @@ def get_my_bookings(
 ):
     return CampaignBookingService.get_brand_bookings(db, current_user["user_id"])
 
-@router.patch("/{booking_id}/query", response_model=CampaignBookingResponse)
-def submit_brand_query(
-    booking_id: int,
-    data: CampaignBookingQueryUpdate,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
-):
-    return CampaignBookingService.submit_brand_query(
-        db,
-        booking_id,
-        current_user["user_id"],
-        data.brand_query,
-    )
 
-@router.get("/{booking_id}/query", response_model=CampaignBookingResponse)
-def fetch_brand_query(
-    booking_id: int,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
-):
-    return CampaignBookingService.get_brand_query(db, booking_id, current_user)
 
 # --- Admin Routes ---
 
@@ -87,19 +67,7 @@ def manage_booking(
 ):
     return CampaignBookingService.update_booking_status(db, booking_id, data)
 
-@router.patch("/admin/{booking_id}/query/resolve", response_model=CampaignBookingResponse)
-def resolve_brand_query(
-    booking_id: int,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
-):
-    permissions = current_user.get("permissions", [])
-    if MANAGE_BOOKINGS not in permissions and APPROVE_CAMPAIGNS not in permissions:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Permission denied",
-        )
-    return CampaignBookingService.resolve_brand_query(db, booking_id)
+
 
 @router.get("/admin/pending-count")
 def get_pending_count(

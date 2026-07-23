@@ -1,3 +1,5 @@
+import API from "./api";
+
 export const getToken = () => {
   return localStorage.getItem("access_token");
 };
@@ -83,3 +85,11 @@ export const logout = (navigate) => {
     window.location.replace("/");
   }
 };
+
+export const changePassword = (current_password, new_password) => {
+  return API.post("/change-password", {
+    current_password,
+    new_password,
+  });
+};
+

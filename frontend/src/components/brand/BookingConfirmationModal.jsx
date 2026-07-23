@@ -84,7 +84,7 @@ export default function BookingConfirmationModal({
         <button className="bcm-close" onClick={onClose} disabled={loading}>
           <X size={20} />
         </button>
-        
+
         <h2 className="bcm-title">Confirm Booking</h2>
         <p className="bcm-subtitle">Please review your campaign details before confirming.</p>
 
@@ -112,7 +112,7 @@ export default function BookingConfirmationModal({
             <span className="bcm-label">Time</span>
             <span className="bcm-value">{bookingTimeDisplay}</span>
           </div>
-          
+
           <div className="bcm-divider" />
 
           <div className="bcm-credit-type-section">
@@ -149,7 +149,7 @@ export default function BookingConfirmationModal({
 
         <div className="bcm-notes-group">
           <label className="bcm-label">Additional Notes (Optional)</label>
-          <textarea 
+          <textarea
             className="bcm-textarea"
             placeholder="e.g. Focus on festive audience, mention product launch..."
             value={notes}

@@ -20,10 +20,9 @@ class CampaignBookingResponse(BaseModel):
     booking_date: Optional[Union[str, date]]
     booking_time: Optional[Union[str, time]]
     timing_type: str
-    additional_notes: Optional[str]
-    brand_query: Optional[str]
-    brand_query_resolved: bool = False
-    admin_notes: Optional[str]
+    additional_notes: Optional[str] = None
+    admin_notes: Optional[str] = None
+    has_active_query: bool = False
     credit_type: Optional[str]
     credits_used: int
     booking_status: str

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Loader2, RotateCcw, CheckCircle2, XCircle, MessageSquare, Search, X, Layers, Circle, Timer, Star, Ban } from "lucide-react";
-import { fetchAllBookings, resolveBrandQuery, updateBookingStatus } from "../../services/campaignBookings";
+import { fetchAllBookings, updateBookingStatus } from "../../services/campaignBookings";
 import { fetchReports } from "../../services/reports";
 import "./CampaignsPage.css";
 
@@ -59,6 +59,8 @@ export default function CampaignsPage() {
   const [finalDate, setFinalDate] = useState("");
   const [finalTime, setFinalTime] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
+  
+
 
   const loadBookings = async () => {
     setLoading(true);
@@ -87,7 +89,7 @@ export default function CampaignsPage() {
 
   const filteredBookings = bookings.filter((b) => b.booking_status === filter);
 
-  const openReview = (booking) => {
+  const openReview = async (booking) => {
     setSelectedBooking(booking);
     setAdminNotes(booking.admin_notes || "");
     setFinalDate(isMissingTimingValue(booking.booking_date) ? "" : booking.booking_date);
@@ -148,18 +150,7 @@ export default function CampaignsPage() {
     }
   };
 
-  const handleResolveQuery = async () => {
-    if (!selectedBooking) return;
-    setActionLoading(true);
-    try {
-      const response = await resolveBrandQuery(selectedBooking.booking_id);
-      replaceBooking(response.data);
-    } catch (err) {
-      alert("Failed to resolve query: " + (err.response?.data?.detail || "Unknown error"));
-    } finally {
-      setActionLoading(false);
-    }
-  };
+
 
   return (
     <div className="ca-page">
@@ -209,11 +200,7 @@ export default function CampaignsPage() {
                   <tr key={b.booking_id}>
                     <td>
                       <div>{b.brand_name || b.brand_id}</div>
-                      {b.brand_query && (
-                        <span className="ca-query-badge">
-                          <MessageSquare size={12} /> Brand Query Pending
-                        </span>
-                      )}
+                      {/* Check if any query exists in backend or just use a generic badge if we added a field, for now we will show this dynamically when they open review */}
                     </td>
                     <td>
                       <div className="ca-fmt">{b.format_slug}</div>
@@ -310,14 +297,7 @@ export default function CampaignsPage() {
                 </div>
               </div>
 
-              {selectedBooking.brand_query && (
-                <div className="ca-notes-section">
-                  <label>Latest Brand Query</label>
-                  <div className="ca-brand-query">
-                    {selectedBooking.brand_query}
-                  </div>
-                </div>
-              )}
+
 
               <div className="ca-notes-section">
                 <label>Admin Notes</label>
@@ -348,15 +328,7 @@ export default function CampaignsPage() {
                   Save Response
                 </button>
               )}
-              {selectedBooking.brand_query && (
-                <button
-                  className="ca-btn ca-btn-resolve"
-                  onClick={handleResolveQuery}
-                  disabled={actionLoading}
-                >
-                  <CheckCircle2 size={16} /> Resolve Query
-                </button>
-              )}
+
               {selectedBooking.booking_status === "pending" && (
                 <>
                   <button

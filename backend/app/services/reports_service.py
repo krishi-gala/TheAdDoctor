@@ -296,12 +296,19 @@ def _brand_leaderboard(db: Session) -> list[dict]:
             CampaignBooking.brand_id == brand.user_id
         ).count()
 
-        # Credits
-        wallet = db.query(BrandWallet).filter(
-            BrandWallet.brand_id == brand.user_id
-        ).first()
-        credits_purchased = wallet.total_credits if wallet else 0
-        credits_consumed = wallet.used_credits if wallet else 0
+        credits_purchased = db.query(
+            func.coalesce(func.sum(Transaction.credits_added), 0)
+        ).filter(
+            Transaction.brand_id == brand.user_id,
+            Transaction.payment_status.in_(["completed", "success"])
+        ).scalar() or 0
+
+        credits_consumed = db.query(
+            func.coalesce(func.sum(CampaignBooking.credits_used), 0)
+        ).filter(
+            CampaignBooking.brand_id == brand.user_id,
+            CampaignBooking.booking_status.in_(["approved", "completed"])
+        ).scalar() or 0
 
         # Last activity: latest campaign or transaction
         last_campaign = db.query(

@@ -24,8 +24,21 @@ export const manageBooking = async (bookingId, data) => {
   return await api.patch(`/bookings/admin/${bookingId}/manage`, data);
 };
 
-export const submitBrandQuery = async (bookingId, brandQuery) => {
-  return await api.patch(`/bookings/${bookingId}/query`, { brand_query: brandQuery });
+// CAMPAIGN QUERY endpoints
+export const submitBrandQuery = (bookingId, subject, message) => {
+  return api.post(`/brand/campaign-queries/${bookingId}`, { subject, message });
+};
+
+export const fetchQueriesForBooking = (bookingId) => {
+  return api.get(`/brand/campaign-queries/${bookingId}`);
+};
+
+export const adminFetchQueriesForBooking = (bookingId) => {
+  return api.get(`/admin/campaign-queries/${bookingId}`);
+};
+
+export const adminReplyToQuery = (queryId, admin_reply, status = "resolved") => {
+  return api.patch(`/admin/campaign-queries/${queryId}/reply`, { admin_reply, status });
 };
 
 export const fetchBrandQuery = async (bookingId) => {

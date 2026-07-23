@@ -121,7 +121,7 @@ export default function NotificationBell() {
                   <div className="notif-content">
                     <div className="notif-desc">{notif.description}</div>
                     <div className="notif-meta">
-                      <span className="notif-time">{new Date(notif.created_at).toLocaleString()}</span>
+                      <span className="notif-time">{new Date(notif.created_at + (notif.created_at.endsWith("Z") ? "" : "Z")).toLocaleString()}</span>
                       {notif.target_type && (
                         <span className="notif-type">{notif.target_type.toUpperCase()}</span>
                       )}

@@ -71,7 +71,7 @@ def purchase_package(
         description=f'Brand "{brand.company_name}" purchased package "{package.package_name}"',
         target_type="transaction",
         target_id=transaction.transaction_id,
-        metadata={"package_name": package.package_name, "credits": package.credits, "amount_paid": package.price},
+        metadata={"package_name": package.package_name, "credits": package.credits, "amount_paid": float(package.price)},
         severity="success",
         is_notification=True
     )

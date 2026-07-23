@@ -12,7 +12,7 @@ class AuditLogResponse(BaseModel):
     target_type: Optional[str] = None
     target_id: Optional[int] = None
     metadata_: Optional[Dict[str, Any]] = None
-    severity: str = "info"
+    severity: Optional[str] = None
     is_notification: bool = False
     notification_read: Optional[bool] = None
 

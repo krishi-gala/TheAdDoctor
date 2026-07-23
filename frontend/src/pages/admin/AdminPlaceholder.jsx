@@ -4,7 +4,7 @@ import { CheckCircle2, Loader2, MessageSquare, Pencil, RotateCcw } from "lucide-
 import { ADMIN_MENU_ITEMS } from "../../config/adminMenu";
 import ConfirmModal from "../../components/admin/ConfirmModal";
 import CampaignsPage from "./CampaignsPage";
-import { fetchApprovedBookings, manageBooking, resolveBrandQuery } from "../../services/campaignBookings";
+import { fetchApprovedBookings, manageBooking, adminFetchQueriesForBooking, adminReplyToQuery } from "../../services/campaignBookings";
 import "./AdminPlaceholder.css";
 
 const isMissingTimingValue = (value) =>
@@ -31,6 +31,11 @@ function AdminBookings() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [completeBooking, setCompleteBooking] = useState(null);
+  
+  const [bookingQueries, setBookingQueries] = useState([]);
+  const [queriesLoading, setQueriesLoading] = useState(false);
+  const [adminReplyText, setAdminReplyText] = useState("");
+  const [replySaving, setReplySaving] = useState(false);
 
   const loadBookings = async () => {
     setLoading(true);
@@ -66,6 +71,14 @@ function AdminBookings() {
       additional_notes: booking.additional_notes || "",
       admin_notes: booking.admin_notes || "",
     });
+
+    setBookingQueries([]);
+    setAdminReplyText("");
+    setQueriesLoading(true);
+    adminFetchQueriesForBooking(booking.booking_id)
+      .then(res => setBookingQueries(res.data || []))
+      .catch(err => console.error("Failed to fetch queries", err))
+      .finally(() => setQueriesLoading(false));
   };
 
   const handleChange = (field, value) => {
@@ -122,23 +135,28 @@ function AdminBookings() {
     }
   };
 
-  const handleResolveQuery = async () => {
-    if (!editingBooking) return;
-
-    setSaving(true);
+  const handleResolveQuery = async (queryId) => {
+    setReplySaving(true);
     try {
-      const response = await resolveBrandQuery(editingBooking.booking_id);
-      setBookings((prev) =>
-        prev.map((booking) =>
-          booking.booking_id === response.data.booking_id ? response.data : booking
-        )
-      );
-      setEditingBooking(response.data);
+      const res = await adminReplyToQuery(queryId, adminReplyText || "Resolved by admin.", "resolved");
+      setBookingQueries(prev => prev.map(q => q.query_id === queryId ? res.data : q));
+      setAdminReplyText("");
+      // Refresh to clear pending query badges
+      loadBookings();
     } catch (err) {
       alert("Failed to resolve query: " + (err.response?.data?.detail || "Unknown error"));
     } finally {
-      setSaving(false);
+      setReplySaving(false);
     }
+  };
+
+  const fmtDate = (d) => {
+    if (!d) return "—";
+    try {
+      return new Date(d).toLocaleDateString("en-IN", {
+        day: "2-digit", month: "short", year: "numeric",
+      });
+    } catch { return d; }
   };
 
   return (
@@ -169,6 +187,7 @@ function AdminBookings() {
           <table className="ab-table">
             <thead>
               <tr>
+                <th>Booking ID</th>
                 <th>Brand Name</th>
                 <th>Ad Format</th>
                 <th>Business Type</th>
@@ -184,6 +203,7 @@ function AdminBookings() {
             <tbody>
               {bookings.map((booking) => (
                 <tr key={booking.booking_id}>
+                  <td>#{booking.booking_id}</td>
                   <td>{booking.brand_name || booking.brand_id}</td>
                   <td>
                     <div className="ab-primary">{booking.format_slug}</div>
@@ -201,7 +221,7 @@ function AdminBookings() {
                   <td>
                     <div className="ab-status-stack">
                       <span className="ab-status approved">{booking.booking_status}</span>
-                      {booking.brand_query && (
+                      {booking.has_active_query && (
                         <span className="ab-query-badge">
                           <MessageSquare size={12} /> Brand Query Pending
                         </span>
@@ -309,14 +329,58 @@ function AdminBookings() {
                 </div>
               </div>
 
-              {editingBooking.brand_query && (
-                <div className="ab-notes-section">
-                  <label>Latest Brand Query</label>
-                  <div className="ab-query-panel">
-                    {editingBooking.brand_query}
+              <div className="ab-notes-section">
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px', marginBottom: '16px' }}>
+                  <span>Query History</span>
+                </label>
+                
+                {queriesLoading ? (
+                  <div style={{ color: '#888', padding: '10px 0', fontSize: '13px' }}><Loader2 size={14} className="ab-spinner" style={{marginRight: '8px'}} /> Loading queries...</div>
+                ) : bookingQueries.length === 0 ? (
+                  <div style={{ color: '#888', padding: '10px 0', fontSize: '13px' }}>No queries raised for this booking.</div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {bookingQueries.map(q => (
+                      <div key={q.query_id} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '16px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                          <span style={{ fontWeight: 600, fontSize: '14px', color: '#fff' }}>{q.subject}</span>
+                          <span style={{ fontSize: '12px', color: '#888' }}>{fmtDate(q.created_at)}</span>
+                        </div>
+                        <div style={{ fontSize: '13px', color: '#ccc', marginBottom: '12px', lineHeight: 1.5 }}>
+                          {q.message}
+                        </div>
+                        
+                        {q.admin_reply ? (
+                          <div style={{ background: 'rgba(56, 189, 248, 0.05)', borderLeft: '3px solid #38bdf8', padding: '12px', borderRadius: '0 8px 8px 0' }}>
+                            <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#38bdf8', fontWeight: 600, marginBottom: '4px' }}>Admin Reply</div>
+                            <div style={{ fontSize: '13px', color: '#fff' }}>{q.admin_reply}</div>
+                          </div>
+                        ) : (
+                          <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                            <textarea
+                              style={{ width: '100%', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', padding: '10px', color: '#fff', fontSize: '13px', minHeight: '80px', resize: 'vertical', marginBottom: '8px' }}
+                              placeholder="Type your reply here..."
+                              value={adminReplyText}
+                              onChange={e => setAdminReplyText(e.target.value)}
+                              disabled={replySaving}
+                            />
+                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                              <button
+                                type="button"
+                                style={{ background: '#38bdf8', color: '#000', border: 'none', padding: '6px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+                                onClick={() => handleResolveQuery(q.query_id)}
+                                disabled={replySaving || !adminReplyText.trim()}
+                              >
+                                {replySaving ? "Sending..." : "Send Reply & Resolve"}
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
 
               <div className="ab-notes-section">
                 <label>Admin Notes</label>
@@ -337,16 +401,7 @@ function AdminBookings() {
               >
                 Cancel
               </button>
-              {editingBooking.brand_query && (
-                <button
-                  type="button"
-                  className="ab-btn ab-btn-resolve"
-                  onClick={handleResolveQuery}
-                  disabled={saving}
-                >
-                  <CheckCircle2 size={16} /> Resolve Query
-                </button>
-              )}
+
               <button type="submit" className="ab-btn ab-btn-save" disabled={saving}>
                 {saving ? "Saving..." : "Save Changes"}
               </button>

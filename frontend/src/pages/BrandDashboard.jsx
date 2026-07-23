@@ -59,7 +59,7 @@ export default function BrandDashboard() {
                   <AlertTriangle size={20} />
                   <span>
                     {wallet?.is_expired && wallet.active_package
-                      ? `Your package "${wallet.active_package}" has expired. Purchase a new package to reactivate campaign credits.`
+                      ? `Your package "${wallet.active_package}" has expired. Purchase a new package to activate campaign credits.`
                       : "No active package. Purchase a package subscription to instantly acquire advertising credits."}
                   </span>
                 </div>
